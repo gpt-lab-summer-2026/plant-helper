@@ -1,0 +1,17 @@
+
+{
+    "plant_data":[
+        {
+            "plant_name": "basilton",
+            "species": "basil",
+            "last_watered": "12.4.2026",
+            "active": "active"
+        },
+        {
+            "plant_name": "martymcfly",
+            "species": "orchidea",
+            "last_watered": "12.4.2026",
+            "active": "inactive"
+        }
+    ]
+}

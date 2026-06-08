@@ -1,0 +1,30 @@
+# Virtualenv / interpreter dirs
+/bin
+/lib
+/pyvenv.cfg
+/activate
+/activate.csh
+/activate.fish
+/Activate.ps1
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Tool caches
+.python-version
+.pytest_cache/
+.mypy_cache/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE / editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Environment files
+.env
