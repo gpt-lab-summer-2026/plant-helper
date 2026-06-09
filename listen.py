@@ -19,3 +19,4 @@ def listen():
     transcription = model.transcribe(myrecording)
     print(transcription["text"])
     return transcription["text"]
+
