@@ -3,9 +3,9 @@
     "plant_data":[
         {
             "plant_name": "basilton",
-            "species": "basil",
-            "last_watered": "2026-04-12",
-            "moisture_percentage": "35%",
+            "species": "Golden Pothos",
+            "last_watered": "2026-06-03",
+            "moisture_percentage": "50%",
             "active": "active"
         },
         {
