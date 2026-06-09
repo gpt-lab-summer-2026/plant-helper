@@ -2,7 +2,7 @@ import ollama
 from ollama import chat
 import datetime
 
-#from listen import *
+from listen import *
 from speak import *
 from plant_profile import *
 #from sensor import *
@@ -39,10 +39,7 @@ def system_prompt(user_input, history):
 history = []
 
 while True:
-    print("give input: ")
-    user_message = input()
-
-    if user_message == "x":
-        break
+    user_message = listen()
+    # TO DO: functionality to stop program
     history.append({"role": "user", "content": user_message})
     system_prompt(user_message, history)
