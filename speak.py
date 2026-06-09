@@ -15,5 +15,3 @@ def speak(text):
     # play the audio
     player = "afplay" if sys.platform == "darwin" else "aplay"
     return subprocess.run([player, "output.wav"], check=True)
-
-speak("rainbow")

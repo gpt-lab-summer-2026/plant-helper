@@ -30,3 +30,7 @@ pip-delete-this-directory.txt
 .env
 
 /share
+
+COPYING
+output.wav
+test_ollama.py

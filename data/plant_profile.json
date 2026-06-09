@@ -4,13 +4,15 @@
         {
             "plant_name": "basilton",
             "species": "basil",
-            "last_watered": "12.4.2026",
+            "last_watered": "2026-04-12",
+            "moisture_percentage": "35%",
             "active": "active"
         },
         {
             "plant_name": "martymcfly",
             "species": "orchidea",
-            "last_watered": "12.4.2026",
+            "last_watered": "2026-04-12",
+            "moisture_percentage": "35%",
             "active": "inactive"
         }
     ]
