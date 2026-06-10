@@ -5,8 +5,9 @@ import sys
 # ai speaks to user 
 
 # TO DO: how to select which language
+# openclaw could detect which language
 # load voice
-voice = PiperVoice.load("voices/en_GB-southern_english_female-low.onnx") # we need .onnx and .json files downloaded, for this only .onnx
+voice = PiperVoice.load("voices/fi_FI-harri-low.onnx") 
 
 def speak(text):
     # sunthesize the text to wav file 

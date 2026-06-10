@@ -10,7 +10,8 @@ model = whisper.load_model("tiny")
 def listen():
     fs = 16000
     # record audio
-    duration = 10.5  # seconds
+    # TO DO: stop recording when no one is speaking, esim. webrtcvad
+    duration = 5  # seconds
     print("speak now")
     myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=1, dtype="float32")
     sd.wait()
@@ -21,4 +22,4 @@ def listen():
     return transcription["text"]
 
 # test print
-print(listen())
+# print(listen())
