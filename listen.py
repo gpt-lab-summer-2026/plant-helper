@@ -34,7 +34,7 @@ def listen():
     transcription = model.transcribe(myrecording, language=language)
 
     print(transcription["text"])
-    return transcription["text"], language
+    return (transcription["text"], language)
 
 # test print
-print(listen())
+# print(listen())
