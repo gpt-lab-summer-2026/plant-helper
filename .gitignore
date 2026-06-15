@@ -6,6 +6,7 @@
 /activate.csh
 /activate.fish
 /Activate.ps1
+/venv
 
 # Python bytecode
 __pycache__/
