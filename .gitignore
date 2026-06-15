@@ -36,3 +36,5 @@ output.wav
 test_ollama.py
 /output.wav
 *output.wav
+
+/example_audios
