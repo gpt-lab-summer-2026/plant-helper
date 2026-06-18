@@ -39,4 +39,4 @@ test_ollama.py
 *output.wav
 
 /example_audios
-/finetuned-model
+/finetuned-models
