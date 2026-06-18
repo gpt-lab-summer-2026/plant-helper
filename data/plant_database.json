@@ -244,6 +244,7 @@
   {
     "id": 7,
     "common_name": "Monstera Deliciosa",
+    "language": "en",
     "scientific_name": "Monstera deliciosa",
     "light": "Bright indirect",
     "water": "When top 5 cm of soil is dry",
@@ -258,6 +259,7 @@
   {
     "id": 8,
     "common_name": "Rubber Plant",
+    "language": "en",
     "scientific_name": "Ficus elastica",
     "light": "Bright indirect",
     "water": "When top soil dries",
@@ -272,6 +274,7 @@
   {
     "id": 9,
     "common_name": "Chinese Evergreen",
+    "language": "en",
     "scientific_name": "Aglaonema commutatum",
     "light": "Low to medium indirect",
     "water": "When top soil dries",
@@ -286,6 +289,7 @@
   {
     "id": 10,
     "common_name": "Parlor Palm",
+    "language": "en",
     "scientific_name": "Chamaedorea elegans",
     "light": "Low to medium indirect",
     "water": "Weekly",
@@ -300,6 +304,7 @@
   {
     "id": 11,
     "common_name": "Areca Palm",
+    "language": "en",
     "scientific_name": "Dypsis lutescens",
     "light": "Bright indirect",
     "water": "Keep evenly moist",
@@ -314,6 +319,7 @@
   {
     "id": 12,
     "common_name": "Bird of Paradise",
+    "language": "en",
     "scientific_name": "Strelitzia nicolai",
     "light": "Bright light",
     "water": "Weekly",
@@ -328,6 +334,7 @@
   {
     "id": 13,
     "common_name": "Jade Plant",
+    "language": "en",
     "scientific_name": "Crassula ovata",
     "light": "Bright light",
     "water": "Every 2-3 weeks",
@@ -342,6 +349,7 @@
   {
     "id": 14,
     "common_name": "Aloe Vera",
+    "language": "en",
     "scientific_name": "Aloe vera",
     "light": "Bright light",
     "water": "Every 2-3 weeks",
@@ -356,6 +364,7 @@
   {
     "id": 15,
     "common_name": "String of Pearls",
+    "language": "en",
     "scientific_name": "Curio rowleyanus",
     "light": "Bright indirect",
     "water": "Every 2-3 weeks",
@@ -370,6 +379,7 @@
   {
     "id": 16,
     "common_name": "Boston Fern",
+    "language": "en",
     "scientific_name": "Nephrolepis exaltata",
     "light": "Medium indirect",
     "water": "Keep moist",
@@ -384,6 +394,7 @@
   {
     "id": 17,
     "common_name": "Calathea Medallion",
+    "language": "en",
     "scientific_name": "Goeppertia veitchiana",
     "light": "Medium indirect",
     "water": "Keep lightly moist",
@@ -398,6 +409,7 @@
   {
     "id": 18,
     "common_name": "Prayer Plant",
+    "language": "en",
     "scientific_name": "Maranta leuconeura",
     "light": "Medium indirect",
     "water": "Keep lightly moist",
@@ -412,6 +424,7 @@
   {
     "id": 19,
     "common_name": "English Ivy",
+    "language": "en",
     "scientific_name": "Hedera helix",
     "light": "Bright indirect",
     "water": "Weekly",
@@ -426,6 +439,7 @@
   {
     "id": 20,
     "common_name": "Cast Iron Plant",
+    "language": "en",
     "scientific_name": "Aspidistra elatior",
     "light": "Low indirect",
     "water": "Every 10-14 days",
