@@ -10,14 +10,6 @@ from speak import *
 from plant_profile import *
 #from sensor import *
 
-def _load_examples():
-    ns = {}
-    with open("data/system_prompts.json") as f:
-        exec(f.read(), ns)
-    return ns.get("examples", [])
-
-_all_examples = _load_examples()
-
 MAX_HISTORY = 20
 STOP_WORD_FI = "lopeta keskustelu"
 WAKE_WORD_FI = "aloita keskustelu"
@@ -28,6 +20,15 @@ waiting_mode = False
 
 # load plant profile
 plant_profile = read()
+
+def _load_examples():
+    ns = {}
+    with open("data/system_prompts.json") as f:
+        exec(f.read(), ns)
+    return ns.get("examples", [])
+
+_all_examples = _load_examples()
+
 
 # read plant database data
 try:
@@ -45,10 +46,14 @@ except FileNotFoundError:
 # look up just the matching species entry from the database
 # database in finnish as well??
 species = plant_profile['species'].lower()
-plant_info = next(
-    (p for p in plant_database if species in p['common_name'].lower() or species in p['scientific_name'].lower()),
+plant_info_fi = next(
+    (p for p in plant_database if species in p['common_name'].lower() and "fi" in p['language'] or species in p['scientific_name'].lower() and "fi" in p['language']),
     None
-) 
+)
+plant_info_en = next(
+    (p for p in plant_database if species in p['common_name'].lower() and "en" in p['language'] or species in p['scientific_name'].lower() and "en" in p['language']),
+    None
+)
 
 def _few_shot_messages(n=3):
     species_lower = plant_profile['species'].lower()
@@ -67,6 +72,7 @@ def _build_system_prompt(language):
     moisture = plant_profile['moisture_percentage']
 
     # watering rule from plant_database, matching the style in system_prompts examples
+    plant_info = plant_info_fi if language == 'fi' else plant_info_en
     watering = plant_info['watering_recommendation'] if plant_info else "Water as needed"
 
     # extra facts from plant_database so the model can answer care questions accurately
@@ -81,22 +87,22 @@ def _build_system_prompt(language):
         extras = ""
 
     return (
-        f"IMPORTANT: You MUST respond in {lang_name} only. "
-        f"You are {name}, a {species} houseplant. "
-        f"Your soil moisture is currently {moisture}%. "
+        f"IMPORTANT: Respond in {lang_name}."
+        f"You are {name}, a {species} plant."
+        f"Your soil moisture is currently {moisture}%."
         f"{watering}. "
         f"{extras} "
-        f"Answer as the plant in a friendly tone, keep answers to 3 sentences. "
+        f"Answer as the plant in a friendly tone, keep answers to 3 sentences. Only use text when generating answers."
         f"Only greet if the user greets you."
     )
 
 def system_prompt(history, language):
-    print("history length: ", len(history))
     trimmed_history = history[-MAX_HISTORY:]
+    print("trimmed history length: ", len(trimmed_history))
     few_shot = _few_shot_messages()
-
+    print("thinking...")
     response = chat(
-        model='qwen2.5:3b',
+        model='gemma3:4b',
         messages=[
                 {'role': 'system', 'content': _build_system_prompt(language)},
                 *few_shot,
@@ -124,7 +130,6 @@ while True:
 
     if not waiting_mode:
         # conversation mode
-
         user_message = listen_conversation()
         if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
             waiting_mode = True
