@@ -10,6 +10,14 @@ from speak import *
 from plant_profile import *
 #from sensor import *
 
+def _load_examples():
+    ns = {}
+    with open("data/system_prompts.json") as f:
+        exec(f.read(), ns)
+    return ns.get("examples", [])
+
+_all_examples = _load_examples()
+
 MAX_HISTORY = 20
 STOP_WORD_FI = "lopeta keskustelu"
 WAKE_WORD_FI = "aloita keskustelu"
@@ -32,7 +40,7 @@ except FileNotFoundError:
     print("Error: The file 'data.json' was not found.")
 
 # load model
-llm = Llama(model_path="finetuned-models/gemma3-second/gemma-3-4b-it.Q8_0.gguf", n_ctx=4096)
+#llm = Llama(model_path="finetuned-models/gemma3-second/gemma-3-4b-it.Q8_0.gguf", n_ctx=4096)
 
 # look up just the matching species entry from the database
 # database in finnish as well??
@@ -42,24 +50,60 @@ plant_info = next(
     None
 ) 
 
+def _few_shot_messages(n=3):
+    species_lower = plant_profile['species'].lower()
+    matches = [e for e in _all_examples if species_lower in e['SYSTEM'].lower()]
+    selected = matches[:n]
+    msgs = []
+    for ex in selected:
+        msgs.append({"role": "user", "content": ex['INPUT']})
+        msgs.append({"role": "assistant", "content": ex['OUTPUT']})
+    return msgs
+
+def _build_system_prompt(language):
+    lang_name = 'Finnish' if language == 'fi' else 'English'
+    name = plant_profile['plant_name']
+    species = plant_profile['species']
+    moisture = plant_profile['moisture_percentage']
+
+    # watering rule from plant_database, matching the style in system_prompts examples
+    watering = plant_info['watering_recommendation'] if plant_info else "Water as needed"
+
+    # extra facts from plant_database so the model can answer care questions accurately
+    if plant_info:
+        extras = (
+            f"Light needs: {plant_info['light']}. "
+            f"Humidity: {plant_info['humidity']}. "
+            f"Pet safe: {'yes' if plant_info['pet_safe'] else 'no'}. "
+            f"Soil: {plant_info['soil_type']}."
+        )
+    else:
+        extras = ""
+
+    return (
+        f"IMPORTANT: You MUST respond in {lang_name} only. "
+        f"You are {name}, a {species} houseplant. "
+        f"Your soil moisture is currently {moisture}%. "
+        f"{watering}. "
+        f"{extras} "
+        f"Answer as the plant in a friendly tone, keep answers to 3 sentences. "
+        f"Only greet if the user greets you."
+    )
+
 def system_prompt(history, language):
     print("history length: ", len(history))
     trimmed_history = history[-MAX_HISTORY:]
-    care_info = f"Care info: {plant_info}" if plant_info else ""
-    lang_name = 'Finnish' if language == 'fi' else 'English'
+    few_shot = _few_shot_messages()
 
-    response = llm.create_chat_completion(
+    response = chat(
+        model='qwen2.5:3b',
         messages=[
-                {'role': 'system', 'content': 
-                    f"IMPORTANT: You MUST respond in {lang_name} only. Do not use any other language.\n"
-                    f"You are a {plant_profile['species']} houseplant named {plant_profile['plant_name']}. Your soil moisture is currently {plant_profile['moisture_percentage']} and if it's high, you don't need water. You were last watered {datetime.datetime.fromisoformat(plant_profile['last_watered'])}. {care_info}"
-                    f" Answer questions from the user as the plant in a friendly tone and keep answers simple and in 3 sentences. Only greet if the user greets you."
-                },
-                #*history,
+                {'role': 'system', 'content': _build_system_prompt(language)},
+                *few_shot,
                 *trimmed_history
                 ]
     )
-    reply = response["choices"][0]["message"]["content"]
+    reply = response.message.content
     reply = reply.removeprefix("assistant:").strip().rstrip("\\")
     print(reply)
     speak(reply, language)

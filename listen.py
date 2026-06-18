@@ -15,7 +15,7 @@ vad.set_mode(1)
 def listen_sleep():
     fs = 16000
     chunk_size = 480  # 30ms at 16kHz, required by webrtcvad
-    silence_limit = 50
+    silence_limit = 30
     pre_buffer_size = 5
 
     silence_count = 0
