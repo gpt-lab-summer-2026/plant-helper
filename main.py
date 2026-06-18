@@ -10,8 +10,25 @@ from speak import *
 from plant_profile import *
 #from sensor import *
 
+MAX_HISTORY = 20
+STOP_WORD_FI = "lopeta keskustelu"
+WAKE_WORD_FI = "aloita keskustelu"
+STOP_WORD_EN = "stop conversation"
+WAKE_WORD_EN = "start conversation"
+
+waiting_mode = False
+
 # load plant profile
 plant_profile = read()
+
+def _load_examples():
+    ns = {}
+    with open("data/system_prompts.json") as f:
+        exec(f.read(), ns)
+    return ns.get("examples", [])
+
+_all_examples = _load_examples()
+
 
 # read plant database data
 try:
@@ -24,31 +41,75 @@ except FileNotFoundError:
     print("Error: The file 'data.json' was not found.")
 
 # load model
-llm = Llama(model_path="finetuned-model/gemma-3-4b-it.Q4_K_M.gguf", n_ctx=4096)
+#llm = Llama(model_path="finetuned-models/gemma3-second/gemma-3-4b-it.Q8_0.gguf", n_ctx=4096)
 
 # look up just the matching species entry from the database
+# database in finnish as well??
 species = plant_profile['species'].lower()
-plant_info = next(
-    (p for p in plant_database if species in p['common_name'].lower() or species in p['scientific_name'].lower()),
+plant_info_fi = next(
+    (p for p in plant_database if species in p['common_name'].lower() and "fi" in p['language'] or species in p['scientific_name'].lower() and "fi" in p['language']),
+    None
+)
+plant_info_en = next(
+    (p for p in plant_database if species in p['common_name'].lower() and "en" in p['language'] or species in p['scientific_name'].lower() and "en" in p['language']),
     None
 )
 
-MAX_HISTORY = 20  # 10 turns
+def _few_shot_messages(n=3):
+    species_lower = plant_profile['species'].lower()
+    matches = [e for e in _all_examples if species_lower in e['SYSTEM'].lower()]
+    selected = matches[:n]
+    msgs = []
+    for ex in selected:
+        msgs.append({"role": "user", "content": ex['INPUT']})
+        msgs.append({"role": "assistant", "content": ex['OUTPUT']})
+    return msgs
+
+def _build_system_prompt(language):
+    lang_name = 'Finnish' if language == 'fi' else 'English'
+    name = plant_profile['plant_name']
+    species = plant_profile['species']
+    moisture = plant_profile['moisture_percentage']
+
+    # watering rule from plant_database, matching the style in system_prompts examples
+    plant_info = plant_info_fi if language == 'fi' else plant_info_en
+    watering = plant_info['watering_recommendation'] if plant_info else "Water as needed"
+
+    # extra facts from plant_database so the model can answer care questions accurately
+    if plant_info:
+        extras = (
+            f"Light needs: {plant_info['light']}. "
+            f"Humidity: {plant_info['humidity']}. "
+            f"Pet safe: {'yes' if plant_info['pet_safe'] else 'no'}. "
+            f"Soil: {plant_info['soil_type']}."
+        )
+    else:
+        extras = ""
+
+    return (
+        f"IMPORTANT: Respond in {lang_name}."
+        f"You are {name}, a {species} plant."
+        f"Your soil moisture is currently {moisture}%."
+        f"{watering}. "
+        f"{extras} "
+        f"Answer as the plant in a friendly tone, keep answers to 3 sentences. Only use text when generating answers."
+        f"Only greet if the user greets you."
+    )
 
 def system_prompt(history, language):
-    print("history length: ", len(history))
-    trimmed = history[-MAX_HISTORY:]
-    care_info = f"Care info: {plant_info}" if plant_info else ""
-    response = llm.create_chat_completion(
+    trimmed_history = history[-MAX_HISTORY:]
+    print("trimmed history length: ", len(trimmed_history))
+    few_shot = _few_shot_messages()
+    print("thinking...")
+    response = chat(
+        model='gemma3:4b',
         messages=[
-                {'role': 'system', 'content': f"You are a {plant_profile['species']} houseplant named {plant_profile['plant_name']}. Your soil moisture is currently {plant_profile['moisture_percentage']} and if it's high, you don't need water. You were last watered {datetime.datetime.fromisoformat(plant_profile['last_watered'])}. {care_info}"
-                    f" Answer questions from the user as the plant in a friendly tone and keep answers simple and in 3 sentences. Only greet if the user greets you. You MUST answer in {'Finnish' if language == 'fi' else 'English'} only."
-                },
-                #*history,
-                *trimmed
+                {'role': 'system', 'content': _build_system_prompt(language)},
+                *few_shot,
+                *trimmed_history
                 ]
     )
-    reply = response["choices"][0]["message"]["content"]
+    reply = response.message.content
     reply = reply.removeprefix("assistant:").strip().rstrip("\\")
     print(reply)
     speak(reply, language)
@@ -57,10 +118,23 @@ def system_prompt(history, language):
 history = []
 
 while True:
-    #print("send message: ")
-    #user_message = input()
-    user_message = listen()
+    if waiting_mode:
+        print("listening for wake word")
+        message, _ = listen_sleep()
+        if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
+            speak("Hei! Miten voin auttaa?", "fi")
+            waiting_mode = False
+        elif message and (message.lower() == WAKE_WORD_EN or WAKE_WORD_EN in message.lower()):
+            speak("Hello! How can I help you?", "en")
+            waiting_mode = False
 
-    print(f"user_message: {user_message}")
-    history.append({"role": "user", "content": user_message[0]})
-    system_prompt(history=history, language=user_message[1])
+    if not waiting_mode:
+        # conversation mode
+        user_message = listen_conversation()
+        if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
+            waiting_mode = True
+            continue
+        print(f"user_message: {user_message}")
+        history.append({"role": "user", "content": user_message[0]})
+        system_prompt(history=history, language=user_message[1])
+

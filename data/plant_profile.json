@@ -1,19 +1,18 @@
-
 {
-    "plant_data":[
-        {
-            "plant_name": "basilton",
-            "species": "Golden Pothos",
-            "last_watered": "2026-06-08",
-            "moisture_percentage": "90%",
-            "active": "active"
-        },
-        {
-            "plant_name": "martymcfly",
-            "species": "orchidea",
-            "last_watered": "2026-04-12",
-            "moisture_percentage": "35%",
-            "active": "inactive"
-        }
-    ]
+  "plant_data": [
+    {
+      "plant_name": "basilton",
+      "species": "Golden Pothos",
+      "last_watered": "2026-06-08",
+      "moisture_percentage": "90%",
+      "active": "inactive"
+    },
+    {
+      "plant_name": "martymcfly",
+      "species": "tomato",
+      "last_watered": "2026-04-12",
+      "moisture_percentage": "35%",
+      "active": "active"
+    }
+  ]
 }
