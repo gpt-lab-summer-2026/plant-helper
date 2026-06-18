@@ -22,7 +22,7 @@
     "fun_fact": "Snake plants are one of the most effective in removing formaldehyde, benzene, and carbon monoxide from the air. "
   },
   {
-    "id": 1,
+    "id": 2,
     "language": "fi",
     "common_name": "Anopinkieli",
     "scientific_name": "Dracaena trifasciata",
@@ -44,7 +44,7 @@
     "fun_fact": "Anopinkielet ovat yksiä tehokkaimmista formaldehydin, bentseenin ja häkän poistajista. "
   },
   {
-    "id": 2,
+    "id": 3,
     "language": "en",
     "common_name": "Golden Pothos",
     "scientific_name": "Epipremnum aureum",
@@ -66,7 +66,7 @@
     "fun_fact": "Pothos is also called hunter's robe, arum ivy, money plant, taro vine. It is also sometimes referred to as devil's ivy because it is nearly impossible to kill and, in nature, can become invasive."
   },
   {
-    "id": 2,
+    "id": 4,
     "language": "fi",
     "common_name": "Kultaköynnös",
     "scientific_name": "Epipremnum aureum",
@@ -88,7 +88,7 @@
     "fun_fact": "Kultaköynnös tunnetaan englanniksi nimellä Devil's Ivy eli Paholaisen muratti. Nimi tulee siitä, että kasvi on lähes mahdoton tappaa: se pysyy sitkeästi vihreänä ja elossa jopa pimeissä tiloissa."
   },
   {
-    "id": 3,
+    "id": 5,
     "common_name": "Heartleaf Philodendron",
     "language": "en",
     "scientific_name": "Philodendron hederaceum",
@@ -110,7 +110,7 @@
     "fun_fact": "Philodendron hederaceum gets its scientific name from the Greek words philo, meaning love, and dendron, meaning tree. This translates to love-tree or tree-loving climber, which perfectly describes my romantic, heart-shaped leaves and my natural habit of scaling tall tree trunks."
   },
   {
-    "id": 3,
+    "id": 6,
     "common_name": "Herttaköynnösvehka",
     "language": "fi",
     "scientific_name": "Philodendron hederaceum",
@@ -132,7 +132,7 @@
     "fun_fact": "Philodendron hederaceum saa tieteellisen nimensä kreikan sanoista philo, joka tarkoittaa rakkautta, ja dendron, joka tarkoittaa puuta. Nimen suora käännös on siis rakkauspuu tai puita rakastava kiipeilijä, mikä kuvastaa täydellisesti romanttisia sydämenmuotoisia lehtiäni, ja minun luontaisen kiipeilijän ominaisuuksia."
   },
   {
-    "id": 4,
+    "id": 7,
     "common_name": "ZZ Plant",
     "language": "en",
     "scientific_name": "Zamioculcas zamiifolia",
@@ -154,7 +154,7 @@
     "fun_fact": "Often dubbed the Eternity Plant, ZZ Plants are famous for surviving extreme neglect, thriving in low light, and requiring very little water thanks to my unique root system"
   },
   {
-    "id": 4,
+    "id": 8,
     "common_name": "Palmuvehka",
     "language": "fi",
     "scientific_name": "Zamioculcas zamiifolia",
@@ -176,7 +176,7 @@
     "fun_fact": "Palmuvehkaa kutsutaan usein ikuisuuskasviksi, sillä ne kestävät hyvin kaltoinkohtelua, voivat hyvin vähäisestä valosta huolimatta ja tarvitsevat erittäin vähän vettäuniikin juurirakenteensa vuoksi."
   },
   {
-    "id": 5,
+    "id": 9,
     "common_name": "Spider Plant",
     "language": "en",
     "scientific_name": "Chlorophytum comosum",
@@ -198,7 +198,7 @@
     "fun_fact": " Spider plants were sent on space missions for their air-purifying abilities, and they earned the nickname airplane plant because they were popular souvenirs for travelers."
   },
   {
-    "id": 5,
+    "id": 10,
     "common_name": "Kirjorönsylilja",
     "language": "fi",
     "scientific_name": "Chlorophytum comosum",
@@ -220,7 +220,7 @@
     "fun_fact": "Kirjorönsyliljoja lähetettiin avaruuteen puhdistamaan astronauttien ilmaa, ja kirjorönsyliljat olivat niin suosittuja tuliaisia, että ne saivat lempinimen lentokonekasvi."
   },
   {
-    "id": 6,
+    "id": 11,
     "common_name": "Peace Lily",
     "scientific_name": "Spathiphyllum wallisii",
     "language": "en",
@@ -242,7 +242,7 @@
     "fun_fact": ""
   },
   {
-    "id": 7,
+    "id": 12,
     "common_name": "Monstera Deliciosa",
     "language": "en",
     "scientific_name": "Monstera deliciosa",
@@ -257,7 +257,7 @@
     "watering_recommendation": "Allow upper soil layer to dry before watering"
   },
   {
-    "id": 8,
+    "id": 13,
     "common_name": "Rubber Plant",
     "language": "en",
     "scientific_name": "Ficus elastica",
@@ -272,7 +272,7 @@
     "watering_recommendation": "Water thoroughly when top few centimeters are dry"
   },
   {
-    "id": 9,
+    "id": 14,
     "common_name": "Chinese Evergreen",
     "language": "en",
     "scientific_name": "Aglaonema commutatum",
@@ -287,7 +287,7 @@
     "watering_recommendation": "Allow top layer of soil to dry before watering"
   },
   {
-    "id": 10,
+    "id": 15,
     "common_name": "Parlor Palm",
     "language": "en",
     "scientific_name": "Chamaedorea elegans",
@@ -302,7 +302,7 @@
     "watering_recommendation": "Keep evenly moist but not wet"
   },
   {
-    "id": 11,
+    "id": 16,
     "common_name": "Areca Palm",
     "language": "en",
     "scientific_name": "Dypsis lutescens",
@@ -317,7 +317,7 @@
     "watering_recommendation": "Do not allow soil to dry completely"
   },
   {
-    "id": 12,
+    "id": 17,
     "common_name": "Bird of Paradise",
     "language": "en",
     "scientific_name": "Strelitzia nicolai",
@@ -332,7 +332,7 @@
     "watering_recommendation": "Water when top 5 cm of soil dries"
   },
   {
-    "id": 13,
+    "id": 18,
     "common_name": "Jade Plant",
     "language": "en",
     "scientific_name": "Crassula ovata",
@@ -347,7 +347,7 @@
     "watering_recommendation": "Allow soil to dry completely between waterings"
   },
   {
-    "id": 14,
+    "id": 19,
     "common_name": "Aloe Vera",
     "language": "en",
     "scientific_name": "Aloe vera",
@@ -362,7 +362,7 @@
     "watering_recommendation": "Water only after soil has fully dried"
   },
   {
-    "id": 15,
+    "id": 20,
     "common_name": "String of Pearls",
     "language": "en",
     "scientific_name": "Curio rowleyanus",
@@ -377,7 +377,7 @@
     "watering_recommendation": "Allow complete drying before watering"
   },
   {
-    "id": 16,
+    "id": 21,
     "common_name": "Boston Fern",
     "language": "en",
     "scientific_name": "Nephrolepis exaltata",
@@ -392,7 +392,7 @@
     "watering_recommendation": "Never allow soil to dry out completely"
   },
   {
-    "id": 17,
+    "id": 22,
     "common_name": "Calathea Medallion",
     "language": "en",
     "scientific_name": "Goeppertia veitchiana",
@@ -407,7 +407,7 @@
     "watering_recommendation": "Maintain consistent moisture without waterlogging"
   },
   {
-    "id": 18,
+    "id": 23,
     "common_name": "Prayer Plant",
     "language": "en",
     "scientific_name": "Maranta leuconeura",
@@ -422,7 +422,7 @@
     "watering_recommendation": "Keep soil lightly moist at all times"
   },
   {
-    "id": 19,
+    "id": 24,
     "common_name": "Ivy",
     "language": "en",
     "scientific_name": "Hedera",
@@ -444,7 +444,7 @@
     "fun_fact": "Ivy has been used in herbal medicine for centuries — extracts from its leaves are still found in cough syrups and expectorants sold across Europe today."
   },
   {
-    "id": 19,
+    "id": 25,
     "common_name": "Muratti",
     "language": "fi",
     "scientific_name": "Hedera",
@@ -466,7 +466,7 @@
     "fun_fact": "Murattia on käytetty kasvislääketieteessä vuosisatojen ajan — sen lehdistä saatavia uutteita löytyy edelleen yskänsiirapeista ja limaa irrottavista lääkkeistä, joita myydään ympäri Eurooppaa tänäkin päivänä."
   },
   {
-    "id": 20,
+    "id": 26,
     "common_name": "Tomato plant",
     "language": "en",
     "scientific_name": "Solanum lycopersicum",
@@ -488,7 +488,7 @@
     "fun_fact": "Tomatoes are botanically a fruit but legally classified as a vegetable in the United States — a distinction settled by the Supreme Court in 1893."
   },
   {
-    "id": 20,
+    "id": 27,
     "common_name": "Tomaatti",
     "language": "fi",
     "scientific_name": "Solanum lycopersicum",
