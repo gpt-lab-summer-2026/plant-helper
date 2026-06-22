@@ -242,7 +242,7 @@
     "fun_fact": "Peace lilies are not actually lilies, but aroids, related to philodendrons."
   },
   {
-    "id": 11,
+    "id": 12,
     "common_name": "Viirivehka",
     "scientific_name": "Spathiphyllum wallisii",
     "language": "fi",
@@ -264,7 +264,7 @@
     "fun_fact": "Viirivehka on kotoisin Etelä-Amerikasta."
   },
   {
-    "id": 12,
+    "id": 13,
     "common_name": "Monstera Deliciosa",
     "language": "en",
     "scientific_name": "Monstera deliciosa",
@@ -286,7 +286,7 @@
     "fun_fact": "Monstera deliciosa can grow up to 20 metres tall and its leaves can become a meter wide."
   },
   {
-    "id": 12,
+    "id": 14,
     "common_name": "Jättipeikonlehti",
     "language": "fi",
     "scientific_name": "Monstera deliciosa",
@@ -308,7 +308,7 @@
     "fun_fact": "Jättipeikonlehti voi kasvaa jopa 20 metriä korkeaksi ja sen lehdet voivat kasvaa metrin leveiksi."
   },
   {
-    "id": 13,
+    "id": 15,
     "common_name": "Rubber Plant",
     "language": "en",
     "scientific_name": "Ficus elastica",
@@ -330,7 +330,7 @@
     "fun_fact": "Rubber plants are a symbol of good fortune and positive energy."
   },
   {
-    "id": 13,
+    "id": 16,
     "common_name": "Kumiviikuna",
     "language": "fi",
     "scientific_name": "Ficus elastica",
@@ -352,7 +352,7 @@
     "fun_fact": "Kumiviikunat symboloivat hyvää onnea ja positiivista energiaa."
   },
   {
-    "id": 14,
+    "id": 17,
     "common_name": "Chinese Evergreen",
     "language": "en",
     "scientific_name": "Aglaonema commutatum",
@@ -361,20 +361,20 @@
     "humidity": "Medium",
     "difficulty": "Easy",
     "pet_safe": false,
-    "toxicity": "",
+    "toxicity": "Can cause intense burning and irritation of the mouth, tongue, and lips in cats and dogs. Contact a veterinarian if ingested.",
     "growth_habit": "Clumping",
     "soil_type": "Peat-based potting mix",
     "soil_drainage": "Good",
     "watering_recommendation": "Allow top layer of soil to dry before watering",
-    "common_problems": "",
-    "signs_of_stress": "",
-    "seasonal_care": "",
-    "propagation": "",
-    "repotting": "",
-    "fun_fact": ""
+    "common_problems": "Chinese evergreen suffer from yellowing leaves, brown leaf tips, and drooping caused by watering or lighting imbalances.",
+    "signs_of_stress": "yellowing leaves, brown crispy leaf tips, inward or upward leaf curling",
+    "seasonal_care": "During the active growing period, provide moderate waterings, monthly fertilizer, and higher humidity. In fall and winter, drastically reduce watering, halt feeding, and protect the plant from cold drafts.",
+    "propagation": "Chinese evergreen can be propagated by stem cuttings in water or soil and plant division.",
+    "repotting": "Repot every 2-3 years. Choose a pot that is around 5 cm wider than the previous one.",
+    "fun_fact": " While called Chinese evergreens, breeders have developed incredible hybrid cultivars that feature splashes of vibrant pink, deep red, and striking silver."
   },
   {
-    "id": 15,
+    "id": 18,
     "common_name": "Parlor Palm",
     "language": "en",
     "scientific_name": "Chamaedorea elegans",
@@ -389,7 +389,7 @@
     "watering_recommendation": "Keep evenly moist but not wet"
   },
   {
-    "id": 16,
+    "id": 19,
     "common_name": "Areca Palm",
     "language": "en",
     "scientific_name": "Dypsis lutescens",
@@ -404,7 +404,7 @@
     "watering_recommendation": "Do not allow soil to dry completely"
   },
   {
-    "id": 17,
+    "id": 20,
     "common_name": "Bird of Paradise",
     "language": "en",
     "scientific_name": "Strelitzia nicolai",
@@ -419,7 +419,7 @@
     "watering_recommendation": "Water when top 5 cm of soil dries"
   },
   {
-    "id": 18,
+    "id": 21,
     "common_name": "Jade Plant",
     "language": "en",
     "scientific_name": "Crassula ovata",
@@ -434,7 +434,7 @@
     "watering_recommendation": "Allow soil to dry completely between waterings"
   },
   {
-    "id": 19,
+    "id": 22,
     "common_name": "Aloe Vera",
     "language": "en",
     "scientific_name": "Aloe vera",
@@ -449,7 +449,7 @@
     "watering_recommendation": "Water only after soil has fully dried"
   },
   {
-    "id": 20,
+    "id": 23,
     "common_name": "String of Pearls",
     "language": "en",
     "scientific_name": "Curio rowleyanus",
@@ -464,7 +464,7 @@
     "watering_recommendation": "Allow complete drying before watering"
   },
   {
-    "id": 21,
+    "id": 24,
     "common_name": "Boston Fern",
     "language": "en",
     "scientific_name": "Nephrolepis exaltata",
@@ -479,7 +479,7 @@
     "watering_recommendation": "Never allow soil to dry out completely"
   },
   {
-    "id": 22,
+    "id": 25,
     "common_name": "Calathea Medallion",
     "language": "en",
     "scientific_name": "Goeppertia veitchiana",
@@ -494,7 +494,7 @@
     "watering_recommendation": "Maintain consistent moisture without waterlogging"
   },
   {
-    "id": 23,
+    "id": 26,
     "common_name": "Prayer Plant",
     "language": "en",
     "scientific_name": "Maranta leuconeura",
@@ -509,7 +509,7 @@
     "watering_recommendation": "Keep soil lightly moist at all times"
   },
   {
-    "id": 24,
+    "id": 27,
     "common_name": "Ivy",
     "language": "en",
     "scientific_name": "Hedera",
@@ -531,7 +531,7 @@
     "fun_fact": "Ivy has been used in herbal medicine for centuries — extracts from its leaves are still found in cough syrups and expectorants sold across Europe today."
   },
   {
-    "id": 25,
+    "id": 28,
     "common_name": "Muratti",
     "language": "fi",
     "scientific_name": "Hedera",
@@ -554,7 +554,7 @@
   },
 
   {
-    "id": 26,
+    "id": 29,
     "common_name": "Tomato plant",
     "language": "en",
     "scientific_name": "Solanum lycopersicum",
@@ -576,7 +576,7 @@
     "fun_fact": "Tomatoes are botanically a fruit but legally classified as a vegetable in the United States — a distinction settled by the Supreme Court in 1893."
   },
   {
-    "id": 27,
+    "id": 30,
     "common_name": "Tomaatti",
     "language": "fi",
     "scientific_name": "Solanum lycopersicum",
