@@ -405,20 +405,42 @@
     "humidity": "Medium",
     "difficulty": "Easy",
     "pet_safe": true,
-    "toxicity": "",
+    "toxicity": "Parlor palms are non-toxic to dogs, cats, and horses!",
     "growth_habit": "Palm",
     "soil_type": "Palm potting mix",
     "soil_drainage": "Good",
     "watering_recommendation": "Keep evenly moist but not wet",
-    "common_problems": "",
-    "signs_of_stress": "",
-    "seasonal_care": "",
-    "propagation": "",
-    "repotting": "",
-    "fun_fact": ""
+    "common_problems": "Incorrect watering and dry air are usually causing problems such as brown leaf tips. Overwatering causes yellowing fonds.",
+    "signs_of_stress": "brown tips, wilting, yellowing foliage",
+    "seasonal_care": "Minimal seasonal changes include watering more often in warmer months and fertilizing only during the active growing season of spring and summer.",
+    "propagation": "You cannot propagate parlor palms from stem or leaf cuttings. Because they are solitary palms, the only successful, practical ways to multiply them are by dividing established clumps or germinating fresh seeds.",
+    "repotting": "Repot every 2 to 3 years when it is rootbound and use a pot that is around 5 cm wider than the previous one.",
+    "fun_fact": "Parlor palms were popular in Victorian England."
   },
   {
     "id": 20,
+    "common_name": "Sirovuoripalmu",
+    "language": "fi",
+    "scientific_name": "Chamaedorea elegans",
+    "light": "Vähäinen tai kohtalainen epäsuora valo",
+    "water": "Viikoittain",
+    "humidity": "Kohtalainen ilmankosteus",
+    "difficulty": "Helppo",
+    "pet_safe": true,
+    "toxicity": "Sirovuoripalmut eivät ole myrkyllisiä koirille, kissoille tai hevoksille!",
+    "growth_habit": "Palmu",
+    "soil_type": "Palmumulta",
+    "soil_drainage": "Hyvä",
+    "watering_recommendation": "Pidä multa tasaisesti kosteana, mutta ei liian märkänä.",
+    "common_problems": "Huono kastelu ja kuiva ilma voivat aiheuttaa vaivoja, kuten ruskistaa lehtien kärkiä. Ylikastelu kellastuttaa kasvia.",
+    "signs_of_stress": "ruskeat kärjet, kuivuminen, kellertävät lehdet",
+    "seasonal_care": "Vähäisiin kausittaisiin muutoksiin kuuluu useammin kastelu lämpimämpien kuukausien aikana ja kasviravinteen antaminen vain kasvukautena keväällä ja kesällä.",
+    "propagation": "Sirovuoripalmua ei voi lisätä pistokkailla, koska ne ovat yksittäisiä palmuja. Sirovuoripalmua voi lisätä jakamalla kyhmyistä tai kasvattamalla siemenistä.",
+    "repotting": "Vaihda ruukkua 2-3 vuoden välin kun juuret ovat kasvaneet. Valitse ruukku, joka on noin 5 cm leveämpi kuin edellinen ruukku.",
+    "fun_fact": "Sirovuoripalmut olivat suosittuja viktoriaanisessa Englannissa."
+  },
+  {
+    "id": 21,
     "common_name": "Areca Palm",
     "language": "en",
     "scientific_name": "Dypsis lutescens",
@@ -439,7 +461,7 @@
     "fun_fact": ""
   },
   {
-    "id": 21,
+    "id": 22,
     "common_name": "Bird of Paradise",
     "language": "en",
     "scientific_name": "Strelitzia nicolai",
@@ -460,7 +482,7 @@
     "fun_fact": ""
   },
   {
-    "id": 22,
+    "id": 23,
     "common_name": "Jade Plant",
     "language": "en",
     "scientific_name": "Crassula ovata",
@@ -475,7 +497,7 @@
     "watering_recommendation": "Allow soil to dry completely between waterings"
   },
   {
-    "id": 23,
+    "id": 24,
     "common_name": "Aloe Vera",
     "language": "en",
     "scientific_name": "Aloe vera",
@@ -490,7 +512,7 @@
     "watering_recommendation": "Water only after soil has fully dried"
   },
   {
-    "id": 24,
+    "id": 25,
     "common_name": "String of Pearls",
     "language": "en",
     "scientific_name": "Curio rowleyanus",
@@ -505,7 +527,7 @@
     "watering_recommendation": "Allow complete drying before watering"
   },
   {
-    "id": 25,
+    "id": 26,
     "common_name": "Boston Fern",
     "language": "en",
     "scientific_name": "Nephrolepis exaltata",
@@ -520,7 +542,7 @@
     "watering_recommendation": "Never allow soil to dry out completely"
   },
   {
-    "id": 26,
+    "id": 27,
     "common_name": "Calathea Medallion",
     "language": "en",
     "scientific_name": "Goeppertia veitchiana",
@@ -535,7 +557,7 @@
     "watering_recommendation": "Maintain consistent moisture without waterlogging"
   },
   {
-    "id": 27,
+    "id": 28,
     "common_name": "Prayer Plant",
     "language": "en",
     "scientific_name": "Maranta leuconeura",
@@ -550,7 +572,7 @@
     "watering_recommendation": "Keep soil lightly moist at all times"
   },
   {
-    "id": 28,
+    "id": 29,
     "common_name": "Ivy",
     "language": "en",
     "scientific_name": "Hedera",
@@ -572,7 +594,7 @@
     "fun_fact": "Ivy has been used in herbal medicine for centuries — extracts from its leaves are still found in cough syrups and expectorants sold across Europe today."
   },
   {
-    "id": 29,
+    "id": 30,
     "common_name": "Muratti",
     "language": "fi",
     "scientific_name": "Hedera",
@@ -589,13 +611,13 @@
     "common_problems": "Hämähäkkipunkit ja kirvat ovat yleisiä tuholaisia erityisesti kuivassa sisäilmassa; liikakastelu johtaa juurten mädäntymiseen; lehdet palavat liiallisesta suorasta auringonvalosta.",
     "signs_of_stress": "kellastuvat lehdet, ruskeat ja rapeat lehden reunat, hentoa ja harvaa kasvua, lehtien putoaminen, verkko lehtien alla",
     "seasonal_care": "Muratti viihtyy viileämmissä lämpötiloissa ja kasvaa hitaasti talvella: vähennä kastelua äläkä lannoita. Leikkaa keväällä pensasmaisen kasvun edistämiseksi. Voidaan kasvattaa ulkona lauhkeissa ilmastoissa ympäri vuoden.",
-    "propagation": "Varsipistokkaista, joissa on vähintään yksi kyhmy, keväällä tai kesällä. Juurruta vedessä tai kosteassa multaseoksessa. Juuret kehittyvät 4–6 viikossa.",
+    "propagation": "Varsipistokkaista, joissa on vähintään yksi kyhmy, keväällä tai kesällä. Juurruta vedessä tai kosteassa multaseoksessa. Juuret kehittyvät 4-6 viikossa.",
     "repotting": "Siirrä uuteen ruukkuun 1-2 vuoden välein keväällä, kun juuret alkavat kasvaa ruukun ulkopuolelle. Valitse vain hieman nykyistä suurempi ruukku ja käytä hyvin vettä läpäisevää multaseosta.",
     "fun_fact": "Murattia on käytetty kasvislääketieteessä vuosisatojen ajan — sen lehdistä saatavia uutteita löytyy edelleen yskänsiirapeista ja limaa irrottavista lääkkeistä, joita myydään ympäri Eurooppaa tänäkin päivänä."
   },
 
   {
-    "id": 30,
+    "id": 31,
     "common_name": "Tomato plant",
     "language": "en",
     "scientific_name": "Solanum lycopersicum",
@@ -617,7 +639,7 @@
     "fun_fact": "Tomatoes are botanically a fruit but legally classified as a vegetable in the United States — a distinction settled by the Supreme Court in 1893."
   },
   {
-    "id": 31,
+    "id": 32,
     "common_name": "Tomaatti",
     "language": "fi",
     "scientific_name": "Solanum lycopersicum",
