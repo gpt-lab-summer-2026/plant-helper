@@ -7,7 +7,7 @@ from llama_cpp import Llama
 #from listen import *
 from listen import *
 from speak import *
-from plant_profile import *
+from load_data import *
 #from sensor import *
 
 MAX_HISTORY = 20
@@ -18,33 +18,20 @@ WAKE_WORD_EN = "start conversation"
 
 waiting_mode = False
 
-# load plant profile
+# load plant profile and examples
 plant_profile = read()
-
-def _load_examples():
-    ns = {}
-    with open("data/system_prompts.json") as f:
-        exec(f.read(), ns)
-    return ns.get("examples", [])
-
-_all_examples = _load_examples()
-
+_all_examples = load_examples()
 
 # read plant database data
 try:
     with open('data/plant_database.json', 'r') as file:
         data = json.load(file)
-    #print("File data =", data)
     plant_database = data
     
 except FileNotFoundError:
     print("Error: The file 'data.json' was not found.")
 
-# load model
-#llm = Llama(model_path="finetuned-models/gemma3-second/gemma-3-4b-it.Q8_0.gguf", n_ctx=4096)
-
 # look up just the matching species entry from the database
-# database in finnish as well??
 species = plant_profile['species'].lower()
 plant_info_fi = next(
     (p for p in plant_database if species in p['common_name'].lower() and "fi" in p['language'] or species in p['scientific_name'].lower() and "fi" in p['language']),
@@ -131,6 +118,8 @@ while True:
     if not waiting_mode:
         # conversation mode
         user_message = listen_conversation()
+        #print("input: ")
+        #user_message = input(), "en"
         if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
             waiting_mode = True
             continue
