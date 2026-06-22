@@ -2,17 +2,38 @@
   "plant_data": [
     {
       "plant_name": "basilton",
-      "species": "Golden Pothos",
+      "species": "basil",
       "last_watered": "2026-06-08",
       "moisture_percentage": "90%",
       "active": "inactive"
     },
     {
       "plant_name": "martymcfly",
-      "species": "tomato",
-      "last_watered": "2026-04-12",
+      "species": "Tomato",
+      "last_watered": "2026-06-20",
       "moisture_percentage": "35%",
       "active": "active"
+    },
+    {
+      "plant_name": "Vilperi",
+      "species": "Golden Pothos",
+      "last_watered": "2026-06-12",
+      "moisture_percentage": "30%",
+      "active": "inactive"
+    },
+    {
+      "plant_name": "Muskotti",
+      "species": "Snake Plant",
+      "last_watered": "2026-06-12",
+      "moisture_percentage": "30%",
+      "active": "inactive"
+    },
+    {
+      "plant_name": "Sleepy",
+      "species": "ZZ plant",
+      "last_watered": "2026-06-12",
+      "moisture_percentage": "30%",
+      "active": "inactive"
     }
   ]
 }

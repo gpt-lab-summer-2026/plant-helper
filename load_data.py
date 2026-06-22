@@ -75,3 +75,8 @@ def update_plant(plant_name, species=None, last_watered=None, make_active=False)
     print('Updated plant =', plant)
     return data
 
+def load_examples():
+    ns = {}
+    with open("data/system_prompts.json") as f:
+        exec(f.read(), ns)
+    return ns.get("examples", [])
