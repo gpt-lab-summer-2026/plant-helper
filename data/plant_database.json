@@ -449,19 +449,42 @@
     "humidity": "High",
     "difficulty": "Moderate",
     "pet_safe": true,
+    "toxicity": "Areca palms are non-toxic to cats, dogs, and horses!",
     "growth_habit": "Palm",
     "soil_type": "Rich palm mix",
     "soil_drainage": "Good",
     "watering_recommendation": "Do not allow soil to dry completely",
-    "common_problems": "",
-    "signs_of_stress": "",
-    "seasonal_care": "",
-    "propagation": "",
-    "repotting": "",
-    "fun_fact": ""
+    "common_problems": "Low humidity causes leaf tips to brown, and overwatering can cause yellowing fronds.",
+    "signs_of_stress": "leaf color changes, stalled growth",
+    "seasonal_care": "Mimic tropical habitat.",
+    "propagation": "Areca palms can be propagated through division or seeds.",
+    "repotting": "Repot every 2 to 3 years during the spring. Select a sturdy pot with drainage holes that is 3 to 5 cm wider than the previous one.",
+    "fun_fact": "Areca nuts are used in traditional Chinese medicine."
   },
   {
     "id": 22,
+    "common_name": "Kultapalmu",
+    "language": "fi",
+    "scientific_name": "Dypsis lutescens",
+    "light": "Kirkas epäsuora valo",
+    "water": "Pidä tasaisesti kosteana",
+    "humidity": "Korkea ilmankosteus",
+    "difficulty": "Keskivaikea",
+    "pet_safe": true,
+    "toxicity": "Kultapalmut eivät ole myrkyllisiä kissoille, koirille tai hevosille!",
+    "growth_habit": "Palmu",
+    "soil_type": "Palmumulta",
+    "soil_drainage": "Hyvä",
+    "watering_recommendation": "Älä anna mullan kokonaan kuivua kasteluiden välissä.",
+    "common_problems": "Matala ilmankosteus ruskistaa lehtiä ja ylikastelu kellastaa kasvia.",
+    "signs_of_stress": "lehtien värimuutokset, hidastunut kasvu",
+    "seasonal_care": "Imitoi trooppista ympäristöä.",
+    "propagation": "Kultapalmuja voi jakaa jakamalla tai siemenillä. Ethän ota pistokkaita!",
+    "repotting": "Vaihda ruukkua 2-3 vuoden välein keväällä. Valitse 3-5 cm leveämpi ruukku, jossa on hyvät reiät pohjassa.",
+    "fun_fact": "Kultapalmun pähkinöitä käytetään perinteisessä kiinalaisessa lääketieteessä."
+  },
+  {
+    "id": 23,
     "common_name": "Bird of Paradise",
     "language": "en",
     "scientific_name": "Strelitzia nicolai",
@@ -470,19 +493,42 @@
     "humidity": "Medium",
     "difficulty": "Moderate",
     "pet_safe": false,
+    "toxicity": "Bird of Paradise are mildly to moderately toxic to pets. Ingestion by dogs and cats can result in gastrointestinal distress, the seeds and fruit pose a higher risk than the leaves or stems.",
     "growth_habit": "Upright",
     "soil_type": "Rich well-draining potting soil",
     "soil_drainage": "Good",
     "watering_recommendation": "Water when top 5 cm of soil dries",
-    "common_problems": "",
-    "signs_of_stress": "",
-    "seasonal_care": "",
-    "propagation": "",
-    "repotting": "",
-    "fun_fact": ""
+    "common_problems": "Common problems include yellowing or browning leaves due to overwatering, crispy edges from dry air, and stunted growth from low light.",
+    "signs_of_stress": "inward-curling or canoe-shaped leaves, crispy brown margins, drooping yellow leaves, new shoots turning brown and dying before fully unfurling",
+    "seasonal_care": "Provide bright, indirect to direct light, keeping the soil moist but not soggy during active growth. In fall and winter, reduce watering and halt fertilizer entirely.",
+    "propagation": "Bird of Paradise can be propagated by division, which means splitting a mature plant into smaller sections during spring.",
+    "repotting": "Repot every 3 to 4 years, when the plant is truly pot-bound. Bird of paradise actually prefer slightly cramped roots.",
+    "fun_fact": "Bird of Paradise have vibrant, crane-like blooms."
   },
   {
-    "id": 23,
+    "id": 24,
+    "common_name": "Kolibrikukka",
+    "language": "fi",
+    "scientific_name": "Strelitzia nicolai",
+    "light": "Kirkas valo",
+    "water": "Viikoittain",
+    "humidity": "Kohtalainen ilmankosteus",
+    "difficulty": "Keskivaikea",
+    "pet_safe": false,
+    "toxicity": "Kolibrikukat ovat myrkyllisiä lemmikeille. Jos kissa tai koira syö kolibrikukkaa, niille voi tulla suolistovaivoja. Kasvin siemenet ja hedelmät ovat vaarallisempia kuin lehdet ja varret.",
+    "growth_habit": "Pystysuuntainen",
+    "soil_type": "Rikas, hyvin vettä läpäisevä multa",
+    "soil_drainage": "Hyvä",
+    "watering_recommendation": "Kastele kun 5 cm mullan pinnasta on kuivunut.",
+    "common_problems": "Yleisiin ongelmiin kuuluvat kellertävät tai rusehtavat lehdet ylikastelusta, rapeat reunukset kuivasta ilmasta, ja hidastunut kasvu riittämättömästä valosta.",
+    "signs_of_stress": "sisäänpäin kaartuvat tai kanootinmuotoiset lehdet, ruskeat rapeat reunat, nuukahtaneet keltaiset lehdet, uudet versot jotka rusehtuvat ja kuolevat ennen kuin kerkeävät kunnolla avautua",
+    "seasonal_care": "Anna kasvukautena kirkasta epäsuoraa tai suoraa valoa sekä pidä multa kosteana, mutta ei litimärkänä. Harvenna kasteluväliä syksyllä ja talvella, äläkä anna kasviravinnetta.",
+    "propagation": "Kolibrikukkaa voi jakaa jakamalla ison kasvin pienempiin osiin keväällä.",
+    "repotting": "Vaihda ruukkua 3-4 vuoden välein, kun ruukku käy oikeasti liian pieneksi. Kolibrikukat pitävät enemmän hieman ahtaasta tilasta juurillensa.",
+    "fun_fact": "Kolibrikukkien kukinnot ovat kirkkaan värikkäitä ja kurkimaisia."
+  },
+  {
+    "id": 25,
     "common_name": "Jade Plant",
     "language": "en",
     "scientific_name": "Crassula ovata",
@@ -494,10 +540,16 @@
     "growth_habit": "Shrubby",
     "soil_type": "Cactus and succulent mix",
     "soil_drainage": "Excellent",
-    "watering_recommendation": "Allow soil to dry completely between waterings"
+    "watering_recommendation": "Allow soil to dry completely between waterings",
+    "common_problems": "",
+    "signs_of_stress": "",
+    "seasonal_care": "",
+    "propagation": "",
+    "repotting": "",
+    "fun_fact": ""
   },
   {
-    "id": 24,
+    "id": 26,
     "common_name": "Aloe Vera",
     "language": "en",
     "scientific_name": "Aloe vera",
@@ -509,10 +561,16 @@
     "growth_habit": "Rosette",
     "soil_type": "Cactus and succulent mix",
     "soil_drainage": "Excellent",
-    "watering_recommendation": "Water only after soil has fully dried"
+    "watering_recommendation": "Water only after soil has fully dried",
+    "common_problems": "",
+    "signs_of_stress": "",
+    "seasonal_care": "",
+    "propagation": "",
+    "repotting": "",
+    "fun_fact": ""
   },
   {
-    "id": 25,
+    "id": 27,
     "common_name": "String of Pearls",
     "language": "en",
     "scientific_name": "Curio rowleyanus",
@@ -527,7 +585,7 @@
     "watering_recommendation": "Allow complete drying before watering"
   },
   {
-    "id": 26,
+    "id": 28,
     "common_name": "Boston Fern",
     "language": "en",
     "scientific_name": "Nephrolepis exaltata",
@@ -542,7 +600,7 @@
     "watering_recommendation": "Never allow soil to dry out completely"
   },
   {
-    "id": 27,
+    "id": 29,
     "common_name": "Calathea Medallion",
     "language": "en",
     "scientific_name": "Goeppertia veitchiana",
@@ -557,7 +615,7 @@
     "watering_recommendation": "Maintain consistent moisture without waterlogging"
   },
   {
-    "id": 28,
+    "id": 30,
     "common_name": "Prayer Plant",
     "language": "en",
     "scientific_name": "Maranta leuconeura",
@@ -572,7 +630,7 @@
     "watering_recommendation": "Keep soil lightly moist at all times"
   },
   {
-    "id": 29,
+    "id": 31,
     "common_name": "Ivy",
     "language": "en",
     "scientific_name": "Hedera",
@@ -594,7 +652,7 @@
     "fun_fact": "Ivy has been used in herbal medicine for centuries — extracts from its leaves are still found in cough syrups and expectorants sold across Europe today."
   },
   {
-    "id": 30,
+    "id": 32,
     "common_name": "Muratti",
     "language": "fi",
     "scientific_name": "Hedera",
@@ -617,7 +675,7 @@
   },
 
   {
-    "id": 31,
+    "id": 33,
     "common_name": "Tomato plant",
     "language": "en",
     "scientific_name": "Solanum lycopersicum",
@@ -639,7 +697,7 @@
     "fun_fact": "Tomatoes are botanically a fruit but legally classified as a vegetable in the United States — a distinction settled by the Supreme Court in 1893."
   },
   {
-    "id": 32,
+    "id": 34,
     "common_name": "Tomaatti",
     "language": "fi",
     "scientific_name": "Solanum lycopersicum",
