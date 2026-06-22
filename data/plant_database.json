@@ -375,6 +375,28 @@
   },
   {
     "id": 18,
+    "common_name": "Laikkuvehka",
+    "language": "fi",
+    "scientific_name": "Aglaonema commutatum",
+    "light": "Vähäinen tai kohtalainen epäsuora valo",
+    "water": "Kun mullan pinta on kuiva",
+    "humidity": "Kohtalainen ilmankosteus",
+    "difficulty": "Helppo",
+    "pet_safe": false,
+    "toxicity": "Laikkuvehka voi aiheuttaa vahvaa polton tunnetta ja ärsytystä suun alueella kissoille ja koirille. Ota yhteyttä eläinlääkäriin, jos lemmikkisi syö laikkuvehkaa.",
+    "growth_habit": "Ryppäissä",
+    "soil_type": "Turvetta sisältävä multa",
+    "soil_drainage": "Hyvä",
+    "watering_recommendation": "Anna ylimmän kerroksen mullasta kuivua ennen kastelua.",
+    "common_problems": "Laikkuvehkat kärsivät kellertävistä lehdistä, ruskeista lehtien kärjistä, nuukahtaneista lehdistä, jos kastelu tai valotus ei ole sopivaa.",
+    "signs_of_stress": "kellertävät lehdet, ruskeat rapeat lehtien kärjet, sisään- tai ylöspäin kiertyneet lehdet",
+    "seasonal_care": "Aktiivisen kasvukauden aikana kastele säännöllisesti, anna kasviravinnetta kuukausittain ja varmista kostea kasvuympäristö. Harvenna kasteluväliä reilusti syksyisin ja talvisin, älä anna kasviravinnetta, ja suojele kasvia kylmältä viimalta.",
+    "propagation": "Laikkuvehkaa voidaan lisätä leikkaamalla pistokkaita ja laittamalla ne veteen tai multaan.",
+    "repotting": "Vaihda ruukkua 2-3 vuoden välein. Valitse ruukku joka on noin 5 cm edellistä leveämpi.",
+    "fun_fact": "Laikkuvehkoista on erilaisia värivariaatioita, jotka sisältävät esimerkiksi pinkkiä, tummaa punaista ja hopeaa."
+  },
+  {
+    "id": 19,
     "common_name": "Parlor Palm",
     "language": "en",
     "scientific_name": "Chamaedorea elegans",
@@ -383,13 +405,20 @@
     "humidity": "Medium",
     "difficulty": "Easy",
     "pet_safe": true,
+    "toxicity": "",
     "growth_habit": "Palm",
     "soil_type": "Palm potting mix",
     "soil_drainage": "Good",
-    "watering_recommendation": "Keep evenly moist but not wet"
+    "watering_recommendation": "Keep evenly moist but not wet",
+    "common_problems": "",
+    "signs_of_stress": "",
+    "seasonal_care": "",
+    "propagation": "",
+    "repotting": "",
+    "fun_fact": ""
   },
   {
-    "id": 19,
+    "id": 20,
     "common_name": "Areca Palm",
     "language": "en",
     "scientific_name": "Dypsis lutescens",
@@ -401,10 +430,16 @@
     "growth_habit": "Palm",
     "soil_type": "Rich palm mix",
     "soil_drainage": "Good",
-    "watering_recommendation": "Do not allow soil to dry completely"
+    "watering_recommendation": "Do not allow soil to dry completely",
+    "common_problems": "",
+    "signs_of_stress": "",
+    "seasonal_care": "",
+    "propagation": "",
+    "repotting": "",
+    "fun_fact": ""
   },
   {
-    "id": 20,
+    "id": 21,
     "common_name": "Bird of Paradise",
     "language": "en",
     "scientific_name": "Strelitzia nicolai",
@@ -416,10 +451,16 @@
     "growth_habit": "Upright",
     "soil_type": "Rich well-draining potting soil",
     "soil_drainage": "Good",
-    "watering_recommendation": "Water when top 5 cm of soil dries"
+    "watering_recommendation": "Water when top 5 cm of soil dries",
+    "common_problems": "",
+    "signs_of_stress": "",
+    "seasonal_care": "",
+    "propagation": "",
+    "repotting": "",
+    "fun_fact": ""
   },
   {
-    "id": 21,
+    "id": 22,
     "common_name": "Jade Plant",
     "language": "en",
     "scientific_name": "Crassula ovata",
@@ -434,7 +475,7 @@
     "watering_recommendation": "Allow soil to dry completely between waterings"
   },
   {
-    "id": 22,
+    "id": 23,
     "common_name": "Aloe Vera",
     "language": "en",
     "scientific_name": "Aloe vera",
@@ -449,7 +490,7 @@
     "watering_recommendation": "Water only after soil has fully dried"
   },
   {
-    "id": 23,
+    "id": 24,
     "common_name": "String of Pearls",
     "language": "en",
     "scientific_name": "Curio rowleyanus",
@@ -464,7 +505,7 @@
     "watering_recommendation": "Allow complete drying before watering"
   },
   {
-    "id": 24,
+    "id": 25,
     "common_name": "Boston Fern",
     "language": "en",
     "scientific_name": "Nephrolepis exaltata",
@@ -479,7 +520,7 @@
     "watering_recommendation": "Never allow soil to dry out completely"
   },
   {
-    "id": 25,
+    "id": 26,
     "common_name": "Calathea Medallion",
     "language": "en",
     "scientific_name": "Goeppertia veitchiana",
@@ -494,7 +535,7 @@
     "watering_recommendation": "Maintain consistent moisture without waterlogging"
   },
   {
-    "id": 26,
+    "id": 27,
     "common_name": "Prayer Plant",
     "language": "en",
     "scientific_name": "Maranta leuconeura",
@@ -509,7 +550,7 @@
     "watering_recommendation": "Keep soil lightly moist at all times"
   },
   {
-    "id": 27,
+    "id": 28,
     "common_name": "Ivy",
     "language": "en",
     "scientific_name": "Hedera",
@@ -531,7 +572,7 @@
     "fun_fact": "Ivy has been used in herbal medicine for centuries — extracts from its leaves are still found in cough syrups and expectorants sold across Europe today."
   },
   {
-    "id": 28,
+    "id": 29,
     "common_name": "Muratti",
     "language": "fi",
     "scientific_name": "Hedera",
@@ -554,7 +595,7 @@
   },
 
   {
-    "id": 29,
+    "id": 30,
     "common_name": "Tomato plant",
     "language": "en",
     "scientific_name": "Solanum lycopersicum",
@@ -576,7 +617,7 @@
     "fun_fact": "Tomatoes are botanically a fruit but legally classified as a vegetable in the United States — a distinction settled by the Supreme Court in 1893."
   },
   {
-    "id": 30,
+    "id": 31,
     "common_name": "Tomaatti",
     "language": "fi",
     "scientific_name": "Solanum lycopersicum",
