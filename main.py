@@ -133,7 +133,7 @@ try:
             sensor_data = read_sensors(ser)
             moisture = get_moisture(sensor_data)
             if moisture is not None:
-                plant_profile['moisture_percentage'] = round((1 - moisture / 1023) * 100)
+                plant_profile['moisture_percentage'] = round((1 - moisture / 4095) * 100)
                 current_dry = is_dry(moisture)
                 update_watering_date(previous_dry, current_dry)
                 previous_dry = current_dry
