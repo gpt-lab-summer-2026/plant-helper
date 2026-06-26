@@ -4,14 +4,14 @@ import serial
 import json
 from datetime import datetime
 
-SERIAL_PORT = "/dev/ttyS0"  # or /dev/ttyAMA0, check with `ls /dev/tty*`
-BAUD_RATE = 9600
+# SERIAL_PORT = "/dev/ttyS0"  # or /dev/ttyAMA0, check with `ls /dev/tty*` when esp is connected to the pi
+# BAUD_RATE = 9600
 
-ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=2)
+#ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=2)
 active_plant = load_data.read()  # Load active plant data
 last_watering_date = active_plant.get('last_watered')  # Initialize from saved data
 
-def read_sensors() -> dict:
+def read_sensors(ser) -> dict:
     """
     Read a JSON line from ESP and return parsed sensor data.
     Returns empty dict on read failure.
@@ -49,5 +49,5 @@ def update_watering_date(previous_dry: bool, current_dry: bool) -> datetime | No
         load_data.update_plant(active_plant.get('plant_name'), last_watered=last_watering_date.isoformat())
     return last_watering_date
 
-def cleanup():
+def cleanup(ser):
     ser.close()

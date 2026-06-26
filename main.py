@@ -1,14 +1,14 @@
 import ollama
 from ollama import chat
 import datetime
+import serial
 import json
 from llama_cpp import Llama
 
-#from listen import *
 from listen import *
 from speak import *
 from load_data import *
-#from sensor import *
+from sensor import *
 
 MAX_HISTORY = 20
 STOP_WORD_FI = "lopeta keskustelu"
@@ -17,6 +17,10 @@ STOP_WORD_EN = "stop conversation"
 WAKE_WORD_EN = "start conversation"
 
 waiting_mode = False
+
+# init serial connection to ESP32 once at startup
+ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=2)  # or /dev/ttyAMA0, check with `ls /dev/tty*` when esp is connected to the pi
+previous_dry = False
 
 # load plant profile and examples
 plant_profile = read()
@@ -104,26 +108,36 @@ def system_prompt(history, language):
 
 history = []
 
-while True:
-    if waiting_mode:
-        print("listening for wake word")
-        message, _ = listen_sleep()
-        if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
-            speak("Hei! Miten voin auttaa?", "fi")
-            waiting_mode = False
-        elif message and (message.lower() == WAKE_WORD_EN or WAKE_WORD_EN in message.lower()):
-            speak("Hello! How can I help you?", "en")
-            waiting_mode = False
+try:
+    while True:
+        if waiting_mode:
+            print("listening for wake word")
+            message, _ = listen_sleep()
+            if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
+                speak("Hei! Miten voin auttaa?", "fi")
+                waiting_mode = False
+            elif message and (message.lower() == WAKE_WORD_EN or WAKE_WORD_EN in message.lower()):
+                speak("Hello! How can I help you?", "en")
+                waiting_mode = False
 
-    if not waiting_mode:
-        # conversation mode
-        user_message = listen_conversation()
-        #print("input: ")
-        #user_message = input(), "en"
-        if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
-            waiting_mode = True
-            continue
-        print(f"user_message: {user_message}")
-        history.append({"role": "user", "content": user_message[0]})
-        system_prompt(history=history, language=user_message[1])
+        if not waiting_mode:
+            # conversation mode
+            user_message = listen_conversation()
+            #print("input: ")
+            #user_message = input(), "en"
+            if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
+                waiting_mode = True
+                continue
+            print(f"user_message: {user_message}")
+            history.append({"role": "user", "content": user_message[0]})
+            sensor_data = read_sensors(ser)
+            moisture = get_moisture(sensor_data)
+            if moisture is not None:
+                plant_profile['moisture_percentage'] = round((1 - moisture / 1023) * 100)
+                current_dry = is_dry(moisture)
+                update_watering_date(previous_dry, current_dry)
+                previous_dry = current_dry
+            system_prompt(history=history, language=user_message[1])
+finally:
+    cleanup(ser) # update cleanup() in sensor.py to accept ser as a parameter
 
