@@ -4,10 +4,11 @@ import serial
 import json
 from datetime import datetime
 
+# these are now supposed to come from main.py
 # SERIAL_PORT = "/dev/ttyS0"  # or /dev/ttyAMA0, check with `ls /dev/tty*` when esp is connected to the pi
 # BAUD_RATE = 9600
+# ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=2)
 
-#ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=2)
 active_plant = load_data.read()  # Load active plant data
 last_watering_date = active_plant.get('last_watered')  # Initialize from saved data
 
