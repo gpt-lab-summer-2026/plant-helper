@@ -21,6 +21,12 @@ def speak(text, language):
         voice.synthesize_wav(text, wav_file)
     # play the audio
     player = "afplay" if sys.platform == "darwin" else "aplay"
-    return subprocess.run([player, "output.wav"], check=True)
+    device = "plughw:1,0" if sys.platform != "darwin" else None
+    cmd = [player] + (["-D", device] if device else []) + ["output.wav"]
+    try:
+        return subprocess.run(cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Warning: Audio playback failed ({player}): {e}")
+        return None
 
-# speak("how are you, how you doing", 'fi')
+#speak("how are you, how you doing", 'fi')
