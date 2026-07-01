@@ -1,40 +1,41 @@
-from machine import ADC, Pin
-import json
-import time
+#include <Arduino.h>
+#include <ArduinoJson.h>
 
-moisture_adc = ADC(Pin(34))
-moisture_adc.atten(ADC.ATTN_11DB)
+#define MOISTURE_PIN 34
+#define MIC_PIN 35
+#define SAMPLE_US 125
+#define BATCH_SIZE 64
+#define MOISTURE_INTERVAL 1000
 
-mic_adc = ADC(Pin(35))
-mic_adc.atten(ADC.ATTN_11DB)
+unsigned long last_moisture_time = 0;
+int last_moisture = 0;
 
-SAMPLE_US = 125           # 8 kHz — requires 921600 baud set in boot.py
-BATCH_SIZE = 64
+void setup() {
+  Serial.begin(921600);
+  analogReadResolution(12);  // 12-bit ADC, 0-4095
+  analogSetAttenuation(ADC_11db);  // full 0-3.3V range
+}
 
-MOISTURE_INTERVAL = 2000  # ms
-last_moisture_time = 0
-last_moisture = 0
+void loop() {
+  unsigned long now = millis();
 
-# 5-second window to press Ctrl+C in Thonny before the loop starts
-print("Starting in 5s... press Ctrl+C to stop")
-time.sleep(5)
+  // collect audio batch
+  StaticJsonDocument<512> audio_doc;
+  JsonArray samples = audio_doc.createNestedArray("a");
+  for (int i = 0; i < BATCH_SIZE; i++) {
+    samples.add(analogRead(MIC_PIN));
+    delayMicroseconds(SAMPLE_US);
+  }
+  serializeJson(audio_doc, Serial);
+  Serial.println();
 
-try:
-    while True:
-        now = time.ticks_ms()
-
-        # collect one audio batch at ~2 kHz and send over USB
-        samples = []
-        for _ in range(BATCH_SIZE):
-            samples.append(mic_adc.read())
-            time.sleep_us(SAMPLE_US)
-        print(json.dumps({"a": samples}))
-
-        # moisture every 2 seconds
-        if time.ticks_diff(now, last_moisture_time) >= MOISTURE_INTERVAL:
-            last_moisture = moisture_adc.read()
-            last_moisture_time = now
-            print(json.dumps({"m": last_moisture}))
-
-except KeyboardInterrupt:
-    print("Stopped.")
+  // moisture every MOISTURE_INTERVAL ms
+  if (now - last_moisture_time >= MOISTURE_INTERVAL) {
+    last_moisture = analogRead(MOISTURE_PIN);
+    last_moisture_time = now;
+    StaticJsonDocument<64> moisture_doc;
+    moisture_doc["m"] = last_moisture;
+    serializeJson(moisture_doc, Serial);
+    Serial.println();
+  }
+}
