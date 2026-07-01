@@ -31,17 +31,10 @@ def get_active_plant(data):
 
 def read():
     data = load_data()
-    print('File data =', data)
-
     active_plant = get_active_plant(data)
     if not active_plant:
         print('No plant data available.')
         return
-
-    print(active_plant.get('plant_name'))
-    print(active_plant.get('species'))
-    print(active_plant.get('last_watered'))
-    
     return active_plant
 
 
@@ -49,9 +42,7 @@ def update_file(data):
     if not isinstance(data, dict):
         raise ValueError('data must be a dict')
 
-    saved = save_data(data)
-    print('File data =', saved)
-    return saved
+    return save_data(data)
 
 
 def update_plant(plant_name, species=None, last_watered=None, make_active=False):

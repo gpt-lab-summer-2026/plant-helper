@@ -6,8 +6,6 @@ import os
 import serial
 import sys
 
-import ollama
-from ollama import chat
 from llama_cpp import Llama
 
 from listen import *
@@ -23,8 +21,8 @@ WAKE_WORD_EN = "start conversation"
 
 waiting_mode = False
 
-SERIAL_BAUDRATE = 115200
-DEFAULT_SERIAL_PORTS = ["/dev/ttyUSB0", "/dev/ttyACM0"]
+SERIAL_BAUDRATE = 921600
+DEFAULT_SERIAL_PORTS = ["/dev/ttyUSB0", "/dev/ttyACM0", "/dev/cu.usbserial-0001"]
 
 
 def find_serial_port(preferred_port=None, baudrate=SERIAL_BAUDRATE, timeout=2):
@@ -61,10 +59,31 @@ parser = argparse.ArgumentParser(description="Run Plant Helper.")
 parser.add_argument("--serial-port", help="Serial device path for ESP32 (e.g. /dev/ttyUSB0)")
 parser.add_argument("--audio-device", help="Audio input device name or index for sounddevice")
 parser.add_argument("--disable-sensors", action="store_true", help="Run without reading the ESP32 moisture sensor")
+parser.add_argument("--model-backend", choices=["llama_cpp"],
+                    default=os.environ.get("PLANT_MODEL_BACKEND", "llama_cpp"),
+                    help="Choose the model backend to use.")
+parser.add_argument("--llama-model-path",
+                    default=os.environ.get("PLANT_LLAMA_MODEL_PATH", "gemma-3-4b-it-Q4_0.gguf"),
+                    help="Path to a local llama.cpp model file (gguf).")
 args = parser.parse_args()
 
 preferred_port = args.serial_port or os.environ.get("PLANT_SERIAL_PORT")
 audio_device = args.audio_device or os.environ.get("PLANT_AUDIO_DEVICE")
+model_backend = args.model_backend
+
+llama_model_path = args.llama_model_path
+llama_model = None
+
+if model_backend == "llama_cpp":
+    if not llama_model_path:
+        print("Error: --llama-model-path is required when using llama_cpp backend.")
+        sys.exit(1)
+    llama_model = Llama(
+        model_path=llama_model_path,
+        n_threads = 4,
+        n_batch=128,
+    )
+
 ser = None
 if not args.disable_sensors:
     ser = find_serial_port(preferred_port)
@@ -86,11 +105,10 @@ _all_examples = load_examples()
 # read plant database data
 try:
     with open('data/plant_database.json', 'r') as file:
-        data = json.load(file)
-    plant_database = data
-    
+        plant_database = json.load(file)
 except FileNotFoundError:
-    print("Error: The file 'data.json' was not found.")
+    print("Error: data/plant_database.json was not found.")
+    sys.exit(1)
 
 # look up just the matching species entry from the database
 species = plant_profile['species'].lower()
@@ -144,21 +162,56 @@ def _build_system_prompt(language):
         f"Only greet if the user greets you."
     )
 
+
+def _build_llama_prompt(messages):
+    prompt_parts = []
+    for msg in messages:
+        if msg["role"] == "system":
+            prompt_parts.append(msg["content"])
+        elif msg["role"] == "user":
+            prompt_parts.append(f"### User:\n{msg['content']}")
+        elif msg["role"] == "assistant":
+            prompt_parts.append(f"### Assistant:\n{msg['content']}")
+    prompt_parts.append("### Assistant:")
+    return "\n\n".join(prompt_parts)
+
+
+def _llama_chat(messages, model):
+    prompt = _build_llama_prompt(messages)
+    response = model.create_completion(
+        prompt=prompt,
+        max_tokens=128,
+        temperature=0.7,
+        stop=["### User:", "### Assistant:"]
+    )
+    if hasattr(response, "choices") and response.choices:
+        return getattr(response.choices[0], "text", "") or ""
+    if isinstance(response, dict):
+        return response.get("choices", [{}])[0].get("text", "")
+    return ""
+
+
 def system_prompt(history, language):
     trimmed_history = history[-MAX_HISTORY:]
     print("trimmed history length: ", len(trimmed_history))
     few_shot = _few_shot_messages()
     print("thinking...")
-    response = chat(
-        model='gemma3:4b',
-        messages=[
-                {'role': 'system', 'content': _build_system_prompt(language)},
-                *few_shot,
-                *trimmed_history
-                ]
-    )
-    reply = response.message.content
-    reply = reply.removeprefix("assistant:").strip().rstrip("\\")
+    messages = [
+        {'role': 'system', 'content': _build_system_prompt(language)},
+        *few_shot,
+        *trimmed_history
+    ]
+
+    if model_backend == "ollama":
+        response = chat(
+            model='gemma3:4b',
+            messages=messages
+        )
+        reply = response.message.content
+        reply = reply.removeprefix("assistant:").strip().rstrip("\\")
+    else:
+        reply = _llama_chat(messages, llama_model).strip()
+
     print(reply)
     speak(reply, language)
     history.append({"role": "assistant", "content": reply})
@@ -169,7 +222,7 @@ try:
     while True:
         if waiting_mode:
             print("listening for wake word")
-            message, _ = listen_sleep(audio_device)
+            message, _ = listen_sleep(audio_device, ser=ser)
             if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
                 speak("Hei! Miten voin auttaa?", "fi")
                 waiting_mode = False
@@ -179,9 +232,11 @@ try:
 
         if not waiting_mode:
             # conversation mode
-            user_message = listen_conversation(audio_device)
+            user_message = listen_conversation(audio_device, ser=ser)
             #print("input: ")
             #user_message = input(), "en"
+            if not user_message or not user_message[0]:
+                continue
             msg = user_message[0].lower()
             if STOP_WORD_FI in msg or STOP_WORD_EN in msg:
                 waiting_mode = True
@@ -200,5 +255,8 @@ try:
                 update_watering_date(previous_dry, current_dry)
                 previous_dry = current_dry
             system_prompt(history=history, language=user_message[1])
+except KeyboardInterrupt:
+    pass
 finally:
-    cleanup(ser) # update cleanup() in sensor.py to accept ser as a parameter
+    cleanup(ser)
+    os._exit(0)  # force-kill llama_cpp native threads that ignore normal exit
