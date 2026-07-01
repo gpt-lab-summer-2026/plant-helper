@@ -14,10 +14,10 @@ from load_data import *
 from sensor import *
 
 MAX_HISTORY = 20
-STOP_WORD_FI = "lopeta keskustelu"
-WAKE_WORD_FI = "aloita keskustelu"
-STOP_WORD_EN = "stop conversation"
-WAKE_WORD_EN = "start conversation"
+STOP_WORD_FI = "lopeta"
+WAKE_WORD_FI = "aloita"
+STOP_WORD_EN = "stop"
+WAKE_WORD_EN = "start"
 
 waiting_mode = False
 
@@ -163,31 +163,16 @@ def _build_system_prompt(language):
     )
 
 
-def _build_llama_prompt(messages):
-    prompt_parts = []
-    for msg in messages:
-        if msg["role"] == "system":
-            prompt_parts.append(msg["content"])
-        elif msg["role"] == "user":
-            prompt_parts.append(f"### User:\n{msg['content']}")
-        elif msg["role"] == "assistant":
-            prompt_parts.append(f"### Assistant:\n{msg['content']}")
-    prompt_parts.append("### Assistant:")
-    return "\n\n".join(prompt_parts)
-
-
 def _llama_chat(messages, model):
-    prompt = _build_llama_prompt(messages)
-    response = model.create_completion(
-        prompt=prompt,
+    response = model.create_chat_completion(
+        messages=messages,
         max_tokens=128,
         temperature=0.7,
-        stop=["### User:", "### Assistant:"]
     )
     if hasattr(response, "choices") and response.choices:
-        return getattr(response.choices[0], "text", "") or ""
+        return getattr(response.choices[0].message, "content", "") or ""
     if isinstance(response, dict):
-        return response.get("choices", [{}])[0].get("text", "")
+        return response.get("choices", [{}])[0].get("message", {}).get("content", "")
     return ""
 
 
@@ -238,7 +223,7 @@ try:
             if not user_message or not user_message[0]:
                 continue
             msg = user_message[0].lower()
-            if STOP_WORD_FI in msg or STOP_WORD_EN in msg:
+            if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
                 waiting_mode = True
                 continue
             print(f"user_message: {user_message}")
@@ -247,7 +232,7 @@ try:
             print("getting sensor data")
             sensor_data = read_sensors(ser)
             moisture = get_moisture(sensor_data)
-            print(f"mosture from sensor: {moisture}")
+            print(f"moisture from sensor: {moisture}")
 
             if moisture is not None:
                 plant_profile['moisture_percentage'] = round((1 - moisture / 4095) * 100)
@@ -257,6 +242,9 @@ try:
             system_prompt(history=history, language=user_message[1])
 except KeyboardInterrupt:
     pass
+except Exception:
+    import traceback
+    traceback.print_exc()
 finally:
     cleanup(ser)
     os._exit(0)  # force-kill llama_cpp native threads that ignore normal exit

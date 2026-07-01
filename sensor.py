@@ -7,7 +7,7 @@ from datetime import datetime
 
 AUDIO_SAMPLE_RATE = 8000  # 
 _AUDIO_BATCH_SIZE = 64
-AUDIO_ENERGY_THRESHOLD = 300  # RMS above this = speech (silence ~220-235, speech ~300+)
+AUDIO_ENERGY_THRESHOLD = 350  # RMS above this = speech (silence ~220-235, speech ~300+)
 
 active_plant = load_data.read()
 last_watering_date = active_plant.get('last_watered')
@@ -152,7 +152,7 @@ def get_moisture(sensor_data: dict) -> int | None:
     return sensor_data.get("moisture")
 
 
-def is_dry(moisture_value: int, threshold: int = 700) -> bool:
+def is_dry(moisture_value: int, threshold: int = 3000) -> bool:
     return moisture_value > threshold
 
 
