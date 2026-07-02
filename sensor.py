@@ -37,18 +37,24 @@ def read_serial_frame(ser):
 
 def read_sensors(ser) -> dict:
     """
-    Drain audio frames until a moisture frame arrives (or up to 200 frames).
+    Drain all buffered frames and return the most recent moisture reading,
+    so callers see the current value instead of the oldest backlogged one.
     Returns {'moisture': value} or {}.
     """
     if ser is None:
         return {}
-    for _ in range(200):
+    moisture = None
+    while ser.in_waiting > 0:
         kind, value = read_serial_frame(ser)
         if kind == "moisture":
-            return {"moisture": value}
-        if kind is None:
+            moisture = value
+        elif kind is None:
             break
-    return {}
+    if moisture is None:
+        kind, value = read_serial_frame(ser)
+        if kind == "moisture":
+            moisture = value
+    return {"moisture": moisture} if moisture is not None else {}
     
 def get_moisture(sensor_data: dict) -> int | None:
     return sensor_data.get("moisture")
@@ -63,6 +69,11 @@ def update_watering_date(previous_dry: bool, current_dry: bool) -> datetime | No
         print(f"Watering detected at {last_watering_date}")
         load_data.update_plant(active_plant.get('plant_name'), last_watered=last_watering_date.isoformat())
     return last_watering_date
+
+def update_moisture(moisture_percentage):
+    load_data.update_plant(active_plant.get('plant_name'), moisture_percentage=moisture_percentage)
+    return moisture_percentage
+
 
 def cleanup(ser):
     if ser is None:

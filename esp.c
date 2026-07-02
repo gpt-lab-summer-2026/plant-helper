@@ -20,6 +20,7 @@ void loop() {
   unsigned long now = millis();
 
   // collect audio batch
+  /* 
   StaticJsonDocument<512> audio_doc;
   JsonArray samples = audio_doc.createNestedArray("a");
   for (int i = 0; i < BATCH_SIZE; i++) {
@@ -28,6 +29,7 @@ void loop() {
   }
   serializeJson(audio_doc, Serial);
   Serial.println();
+  */
 
   // moisture every MOISTURE_INTERVAL ms
   if (now - last_moisture_time >= MOISTURE_INTERVAL) {

@@ -199,7 +199,7 @@ try:
     while True:
         if waiting_mode:
             print("listening for wake word")
-            message, _ = listen_sleep(audio_device, ser=ser)
+            message, _ = listen_sleep(audio_device)
             if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
                 speak("Hei! Miten voin auttaa?", "fi")
                 waiting_mode = False
@@ -209,7 +209,7 @@ try:
 
         if not waiting_mode:
             # conversation mode
-            user_message = listen_conversation(audio_device, ser=ser)
+            user_message = listen_conversation(audio_device)
             #print("input: ")
             #user_message = input(), "en"
             if not user_message or not user_message[0]:
@@ -227,10 +227,14 @@ try:
             print(f"moisture from sensor: {moisture}")
 
             if moisture is not None:
-                plant_profile['moisture_percentage'] = round((1 - moisture / 4095) * 100)
+                moisture_percentage = str(round((1 - moisture / 4095) * 100))+"%"
+                
                 current_dry = is_dry(moisture)
                 update_watering_date(previous_dry, current_dry)
                 previous_dry = current_dry
+                
+                plant_profile['moisture_percentage'] = update_moisture(moisture_percentage=moisture_percentage)
+
             system_prompt(history=history, language=user_message[1])
 except KeyboardInterrupt:
     pass

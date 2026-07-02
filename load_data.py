@@ -45,7 +45,7 @@ def update_file(data):
     return save_data(data)
 
 
-def update_plant(plant_name, species=None, last_watered=None, make_active=False):
+def update_plant(plant_name, species=None, last_watered=None, moisture_percentage=None, make_active=False):
     data = load_data()
     plant_list = data.setdefault('plant_data', [])
 
@@ -58,6 +58,8 @@ def update_plant(plant_name, species=None, last_watered=None, make_active=False)
         plant['species'] = species
     if last_watered is not None:
         plant['last_watered'] = last_watered
+    if moisture_percentage is not None:
+        plant['moisture_percentage'] = moisture_percentage
     if make_active:
         for other in plant_list:
             other['active'] = 'active' if other is plant else 'inactive'
