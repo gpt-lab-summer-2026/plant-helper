@@ -187,15 +187,7 @@ def system_prompt(history, language):
         *trimmed_history
     ]
 
-    if model_backend == "ollama":
-        response = chat(
-            model='gemma3:4b',
-            messages=messages
-        )
-        reply = response.message.content
-        reply = reply.removeprefix("assistant:").strip().rstrip("\\")
-    else:
-        reply = _llama_chat(messages, llama_model).strip()
+    reply = _llama_chat(messages, llama_model).strip()
 
     print(reply)
     speak(reply, language)

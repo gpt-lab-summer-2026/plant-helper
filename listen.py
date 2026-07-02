@@ -13,14 +13,12 @@ model_sleep = whisper.load_model("tiny")
 vad = webrtcvad.Vad()
 vad.set_mode(1)
 
-
 def _has_audio_device():
     try:
         devices = sd.query_devices()
         return any(d['max_input_channels'] > 0 for d in devices)
     except Exception:
         return False
-
 
 def _resample(audio, orig_rate, target_rate):
     """Linear interpolation resample — good enough for speech."""
@@ -29,7 +27,6 @@ def _resample(audio, orig_rate, target_rate):
     new_len = int(len(audio) * target_rate / orig_rate)
     old_idx = numpy.linspace(0, len(audio) - 1, new_len)
     return numpy.interp(old_idx, numpy.arange(len(audio)), audio).astype(numpy.float32)
-
 
 def _transcribe_float32(recording_float32, model, sample_rate, initial_prompt=None):
     """Transcribe a float32 array (normalised to [-1,1] at sample_rate → resampled to 16 kHz)."""
@@ -55,7 +52,6 @@ def _transcribe_float32(recording_float32, model, sample_rate, initial_prompt=No
     text = result["text"].strip().rstrip(".!?,;:")
     print(f"Transcription: {text}")
     return text, language
-
 
 def _record_with_vad(silence_limit=30, pre_buffer_size=5):
     fs = 16000
@@ -95,9 +91,7 @@ def _record_with_vad(silence_limit=30, pre_buffer_size=5):
             if speech_detected:
                 recorded_chunks.append(chunk)
 
-    print()
     return recorded_chunks
-
 
 def _transcribe(recorded_chunks, model, initial_prompt=None):
     if not recorded_chunks:
@@ -108,7 +102,6 @@ def _transcribe(recorded_chunks, model, initial_prompt=None):
     recording_float32 = recording_int16.astype("float32") / 32768.0
     return _transcribe_float32(recording_float32, model, 16000, initial_prompt)
 
-
 def _keyboard_fallback(prompt="Type your message: "):
     try:
         text = input(prompt).strip()
@@ -117,7 +110,6 @@ def _keyboard_fallback(prompt="Type your message: "):
         return text, language
     except EOFError:
         return None, DEFAULT_LANGUAGE
-
 
 def listen_sleep(audio_device=None, ser=None):
     if ser is not None:

@@ -5,7 +5,7 @@ import json
 import numpy
 from datetime import datetime
 
-AUDIO_SAMPLE_RATE = 8000  # 
+AUDIO_SAMPLE_RATE = 8000  
 _AUDIO_BATCH_SIZE = 64
 AUDIO_ENERGY_THRESHOLD = 350  # RMS above this = speech (silence ~220-235, speech ~300+)
 
@@ -90,7 +90,6 @@ def test_mic(ser, duration_sec=3):
     print(f"Done. {len(all_samples)} samples, peak={numpy.max(numpy.abs(audio)):.3f}")
     return audio
 
-
 def record_from_esp(ser, silence_ms=800, energy_threshold=AUDIO_ENERGY_THRESHOLD, max_sec=10, debug=True):
     """
     Record audio from the ESP32 serial stream using simple energy-based VAD.
@@ -147,14 +146,11 @@ def record_from_esp(ser, silence_ms=800, energy_threshold=AUDIO_ENERGY_THRESHOLD
     raw = numpy.array(all_samples, dtype=numpy.float32)
     return (raw - 2048.0) / 2048.0  # normalise 12-bit (0-4095) to [-1, 1]
 
-
 def get_moisture(sensor_data: dict) -> int | None:
     return sensor_data.get("moisture")
 
-
 def is_dry(moisture_value: int, threshold: int = 3000) -> bool:
     return moisture_value > threshold
-
 
 def update_watering_date(previous_dry: bool, current_dry: bool) -> datetime | None:
     global last_watering_date
@@ -163,7 +159,6 @@ def update_watering_date(previous_dry: bool, current_dry: bool) -> datetime | No
         print(f"Watering detected at {last_watering_date}")
         load_data.update_plant(active_plant.get('plant_name'), last_watered=last_watering_date.isoformat())
     return last_watering_date
-
 
 def cleanup(ser):
     if ser is None:
