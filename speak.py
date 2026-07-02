@@ -20,9 +20,15 @@ def speak(text, language):
     with wave.open("output.wav", "wb" ) as wav_file:
         voice.synthesize_wav(text, wav_file)
     # play the audio
-    player = "afplay" if sys.platform == "darwin" else "aplay"
-    device = "plughw:1,0" if sys.platform != "darwin" else None
-    cmd = [player] + (["-D", device] if device else []) + ["output.wav"]
+    #player = "afplay" if sys.platform == "darwin" else "aplay"
+    #device = "WH-1000XM3" if sys.platform != "darwin" else None  # change to plughw:1,0 if HDMI-1
+    #device = "plughw:1,0" if sys.platform != "darwin" else None
+    #    cmd = [player] + (["-D", device] if device else []) + ["output.wav"]
+    if sys.platform == "darwin":
+        cmd = ["afplay","output.wav"]
+    else:
+        cmd = ["pw-play","output.wav"]
+
     try:
         return subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:

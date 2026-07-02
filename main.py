@@ -5,6 +5,8 @@ import json
 import os
 import serial
 import sys
+import threading
+import time
 
 from llama_cpp import Llama
 
@@ -18,6 +20,21 @@ STOP_WORD_FI = "lopeta"
 WAKE_WORD_FI = "aloita"
 STOP_WORD_EN = "stop"
 WAKE_WORD_EN = "start"
+
+# (seconds since thinking started, phrase to speak) - escalating filler
+# phrases so the plant only comments on the wait once it's actually long.
+THINKING_PHRASES = {
+    "fi": [
+        (10, "Hmm, annas kun mietin..."),
+        (20, "Tämä vaatii vielä hetken miettimistä..."),
+        (30, "Anteeksi, mietin edelleen vastausta..."),
+    ],
+    "en": [
+        (10, "Hmm, let me think..."),
+        (20, "Still thinking about this one..."),
+        (30, "Sorry, I'm still working out my answer..."),
+    ],
+}
 
 waiting_mode = False
 
@@ -177,6 +194,16 @@ def _llama_chat(messages, model):
     return ""
 
 
+def _speak_thinking_fillers(language, done_event):
+    phrases = THINKING_PHRASES.get(language, THINKING_PHRASES["en"])
+    elapsed = 0
+    for delay, phrase in phrases:
+        if done_event.wait(timeout=delay - elapsed):
+            return
+        elapsed = delay
+        speak(phrase, language)
+
+
 def system_prompt(history, language):
     trimmed_history = history[-MAX_HISTORY:]
     print("trimmed history length: ", len(trimmed_history))
@@ -188,7 +215,22 @@ def system_prompt(history, language):
         *trimmed_history
     ]
 
-    reply = _llama_chat(messages, llama_model).strip()
+    result = {}
+
+    def _run_chat():
+        result["reply"] = _llama_chat(messages, llama_model)
+
+    done_event = threading.Event()
+    chat_thread = threading.Thread(target=_run_chat)
+    filler_thread = threading.Thread(target=_speak_thinking_fillers, args=(language, done_event))
+    chat_thread.start()
+    filler_thread.start()
+
+    chat_thread.join()
+    done_event.set()
+    filler_thread.join()
+
+    reply = result.get("reply", "").strip()
 
     print(reply)
     speak(reply, language)
@@ -200,6 +242,12 @@ try:
     while True:
         if waiting_mode:
             print("listening for wake word")
+            print("getting sensor data")
+            sensor_data = read_sensors(ser)
+            moisture = get_moisture(sensor_data)
+            print(f"moisture from sensor: {moisture}")
+            if moisture >= 3000:
+                print(speak("I need water!!", "en"))
             message, _ = listen_sleep(audio_device)
             if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
                 speak("Hei! Miten voin auttaa?", "fi")
@@ -226,7 +274,6 @@ try:
             sensor_data = read_sensors(ser)
             moisture = get_moisture(sensor_data)
             print(f"moisture from sensor: {moisture}")
-
             if moisture is not None:
                 moisture_percentage = str(round((1 - moisture / 4095) * 100))+"%"
                 
