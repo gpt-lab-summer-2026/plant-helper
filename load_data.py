@@ -69,7 +69,5 @@ def update_plant(plant_name, species=None, last_watered=None, moisture_percentag
     return data
 
 def load_examples():
-    ns = {}
-    with open("data/system_prompts.json") as f:
-        exec(f.read(), ns)
-    return ns.get("examples", [])
+    with open("data/system_prompts.json", encoding="utf-8") as f:
+        return json.load(f)

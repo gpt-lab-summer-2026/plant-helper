@@ -82,6 +82,7 @@ if model_backend == "llama_cpp":
         model_path=llama_model_path,
         n_threads = 4,
         n_batch=128,
+        n_ctx=2048,
     )
 
 ser = None
