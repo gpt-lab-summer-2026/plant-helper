@@ -25,7 +25,7 @@ WAKE_WORD_EN = "start"
 # phrases so the plant only comments on the wait once it's actually long.
 THINKING_PHRASES = {
     "fi": [
-        (10, "Hmm, annas kun mietin..."),
+        (10, "Hym, annas kun mietin..."),
         (20, "Tämä vaatii vielä hetken miettimistä..."),
         (30, "Anteeksi, mietin edelleen vastausta..."),
     ],
@@ -35,6 +35,20 @@ THINKING_PHRASES = {
         (30, "Sorry, I'm still working out my answer..."),
     ],
 }
+
+GREETING_WORDS = {
+    "fi": ["hei", "moi", "moikka", "terve", "heippa", "hei hei", "huomenta", "päivää"],
+    "en": ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "yo"],
+}
+
+
+def is_greeting(message, language):
+    if not message:
+        return False
+    text = message.lower().strip().strip("!.,?")
+    words = GREETING_WORDS.get(language, GREETING_WORDS["en"])
+    return any(text == w or text.startswith(w + " ") for w in words)
+
 
 waiting_mode = False
 
@@ -154,6 +168,7 @@ def _build_system_prompt(language):
     name = plant_profile['plant_name']
     species = plant_profile['species']
     moisture = plant_profile['moisture_percentage']
+    last_watering_date = plant_profile['last_watered']
 
     # watering rule from plant_database, matching the style in system_prompts examples
     plant_info = plant_info_fi if language == 'fi' else plant_info_en
@@ -173,10 +188,12 @@ def _build_system_prompt(language):
     return (
         f"IMPORTANT: Respond in {lang_name}."
         f"You are {name}, a {species} plant."
-        f"Your soil moisture is currently {moisture}%."
+        f"Your soil moisture is currently {moisture}%. Optimal soil moisture for a plant is 50-70%"
+        f"You have been last watered on {last_watering_date}."
         f"{watering}. "
         f"{extras} "
         f"Answer as the plant in a friendly tone, keep answers to 3 sentences. Only use text when generating answers."
+        f"You are a plant and you only know things a plant would know"
         f"Only greet if the user greets you."
     )
 
@@ -204,7 +221,7 @@ def _speak_thinking_fillers(language, done_event):
         speak(phrase, language)
 
 
-def system_prompt(history, language):
+def system_prompt(history, language, skip_thinking_fillers=False):
     trimmed_history = history[-MAX_HISTORY:]
     print("trimmed history length: ", len(trimmed_history))
     few_shot = _few_shot_messages()
@@ -222,13 +239,17 @@ def system_prompt(history, language):
 
     done_event = threading.Event()
     chat_thread = threading.Thread(target=_run_chat)
-    filler_thread = threading.Thread(target=_speak_thinking_fillers, args=(language, done_event))
     chat_thread.start()
-    filler_thread.start()
+
+    filler_thread = None
+    if not skip_thinking_fillers:
+        filler_thread = threading.Thread(target=_speak_thinking_fillers, args=(language, done_event))
+        filler_thread.start()
 
     chat_thread.join()
     done_event.set()
-    filler_thread.join()
+    if filler_thread:
+        filler_thread.join()
 
     reply = result.get("reply", "").strip()
 
@@ -278,12 +299,17 @@ try:
                 moisture_percentage = str(round((1 - moisture / 4095) * 100))+"%"
                 
                 current_dry = is_dry(moisture)
-                update_watering_date(previous_dry, current_dry)
                 previous_dry = current_dry
                 
                 plant_profile['moisture_percentage'] = update_moisture(moisture_percentage=moisture_percentage)
+                plant_profile['last_watered'] = update_watering_date(previous_dry, current_dry)
 
-            system_prompt(history=history, language=user_message[1])
+            system_prompt(
+                history=history,
+                language=user_message[1],
+                skip_thinking_fillers=is_greeting(user_message[0], user_message[1]),
+            )
+
 except KeyboardInterrupt:
     pass
 except Exception:

@@ -1,4 +1,4 @@
-# handle moisture sensor and ESP32 audio streaming
+# handle moisture sensor
 import load_data
 import serial
 import json
@@ -65,7 +65,7 @@ def is_dry(moisture_value: int, threshold: int = 3000) -> bool:
 def update_watering_date(previous_dry: bool, current_dry: bool) -> datetime | None:
     global last_watering_date
     if previous_dry and not current_dry:
-        last_watering_date = datetime.now()
+        last_watering_date = datetime.now().date()
         print(f"Watering detected at {last_watering_date}")
         load_data.update_plant(active_plant.get('plant_name'), last_watered=last_watering_date.isoformat())
     return last_watering_date

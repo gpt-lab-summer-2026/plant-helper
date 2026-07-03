@@ -10,7 +10,7 @@ DEFAULT_LANGUAGE = "fi"
 model_wake = WhisperModel("small", device="cpu", compute_type="int8")
 model_sleep = WhisperModel("tiny", device="cpu", compute_type="int8")
 vad = webrtcvad.Vad()
-vad.set_mode(1)
+vad.set_mode(2)
 
 
 def _has_audio_device():
