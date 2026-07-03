@@ -1,8 +1,13 @@
-import ollama
-from ollama import chat
+import argparse
 import datetime
-import serial
+import glob
 import json
+import os
+import serial
+import sys
+import threading
+import time
+
 from llama_cpp import Llama
 
 from listen import *
@@ -11,15 +16,118 @@ from load_data import *
 from sensor import *
 
 MAX_HISTORY = 20
-STOP_WORD_FI = "lopeta keskustelu"
-WAKE_WORD_FI = "aloita keskustelu"
-STOP_WORD_EN = "stop conversation"
-WAKE_WORD_EN = "start conversation"
+STOP_WORD_FI = "lopeta"
+WAKE_WORD_FI = "aloita"
+STOP_WORD_EN = "stop"
+WAKE_WORD_EN = "start"
+
+# (seconds since thinking started, phrase to speak) - escalating filler
+# phrases so the plant only comments on the wait once it's actually long.
+THINKING_PHRASES = {
+    "fi": [
+        (10, "Hym, annas kun mietin..."),
+        (20, "Tämä vaatii vielä hetken miettimistä..."),
+        (30, "Anteeksi, mietin edelleen vastausta..."),
+    ],
+    "en": [
+        (10, "Hmm, let me think..."),
+        (20, "Still thinking about this one..."),
+        (30, "Sorry, I'm still working out my answer..."),
+    ],
+}
+
+GREETING_WORDS = {
+    "fi": ["hei", "moi", "moikka", "terve", "heippa", "hei hei", "huomenta", "päivää"],
+    "en": ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "yo"],
+}
+
+
+def is_greeting(message, language):
+    if not message:
+        return False
+    text = message.lower().strip().strip("!.,?")
+    words = GREETING_WORDS.get(language, GREETING_WORDS["en"])
+    return any(text == w or text.startswith(w + " ") for w in words)
+
 
 waiting_mode = False
 
-# init serial connection to ESP32 once at startup
-ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=2)  # or /dev/ttyAMA0, check with `ls /dev/tty*` when esp is connected to the pi
+SERIAL_BAUDRATE = 921600
+DEFAULT_SERIAL_PORTS = ["/dev/ttyUSB0", "/dev/ttyACM0", "/dev/cu.usbserial-0001"]
+
+
+def find_serial_port(preferred_port=None, baudrate=SERIAL_BAUDRATE, timeout=2):
+    candidates = []
+    if preferred_port:
+        candidates.append(preferred_port)
+    candidates.extend(DEFAULT_SERIAL_PORTS)
+    candidates.extend(glob.glob("/dev/ttyACM*"))
+    candidates.extend(glob.glob("/dev/ttyUSB*"))
+    candidates.extend(glob.glob("/dev/ttyAMA*"))
+    candidates.extend(glob.glob("/dev/serial/by-id/*"))
+
+    seen = []
+    for port in candidates:
+        if not port or port in seen:
+            continue
+        seen.append(port)
+        try:
+            print(f"Trying serial port {port}...")
+            return serial.Serial(port, baudrate, timeout=timeout)
+        except (serial.SerialException, FileNotFoundError) as e:
+            print(f"Could not open serial port {port}: {e}")
+    return None
+
+
+def get_available_serial_ports():
+    return sorted(set(glob.glob("/dev/ttyACM*") +
+                      glob.glob("/dev/ttyUSB*") +
+                      glob.glob("/dev/ttyAMA*") +
+                      glob.glob("/dev/serial/by-id/*")))
+
+
+parser = argparse.ArgumentParser(description="Run Plant Helper.")
+parser.add_argument("--serial-port", help="Serial device path for ESP32 (e.g. /dev/ttyUSB0)")
+parser.add_argument("--audio-device", help="Audio input device name or index for sounddevice")
+parser.add_argument("--disable-sensors", action="store_true", help="Run without reading the ESP32 moisture sensor")
+parser.add_argument("--model-backend", choices=["llama_cpp"],
+                    default=os.environ.get("PLANT_MODEL_BACKEND", "llama_cpp"),
+                    help="Choose the model backend to use.")
+parser.add_argument("--llama-model-path",
+                    default=os.environ.get("PLANT_LLAMA_MODEL_PATH", "gemma-3-4b-it-Q4_0.gguf"),
+                    help="Path to a local llama.cpp model file (gguf).")
+args = parser.parse_args()
+
+preferred_port = args.serial_port or os.environ.get("PLANT_SERIAL_PORT")
+audio_device = args.audio_device or os.environ.get("PLANT_AUDIO_DEVICE")
+model_backend = args.model_backend
+
+llama_model_path = args.llama_model_path
+llama_model = None
+
+if model_backend == "llama_cpp":
+    if not llama_model_path:
+        print("Error: --llama-model-path is required when using llama_cpp backend.")
+        sys.exit(1)
+    llama_model = Llama(
+        model_path=llama_model_path,
+        n_threads = 4,
+        n_batch=128,
+        n_ctx=2048,
+    )
+
+ser = None
+if not args.disable_sensors:
+    ser = find_serial_port(preferred_port)
+    if ser is None:
+        available_ports = get_available_serial_ports()
+        print("Warning: Could not open any serial port for the ESP32 sensor.")
+        print("Available serial devices:", ", ".join(available_ports) if available_ports else "(none)")
+        print("Use --serial-port /dev/ttyUSB0 or set PLANT_SERIAL_PORT to select the correct port.")
+        print("Continuing without sensor data.")
+        if preferred_port:
+            print(f"Tried preferred port: {preferred_port}")
+
 previous_dry = False
 
 # load plant profile and examples
@@ -29,11 +137,10 @@ _all_examples = load_examples()
 # read plant database data
 try:
     with open('data/plant_database.json', 'r') as file:
-        data = json.load(file)
-    plant_database = data
-    
+        plant_database = json.load(file)
 except FileNotFoundError:
-    print("Error: The file 'data.json' was not found.")
+    print("Error: data/plant_database.json was not found.")
+    sys.exit(1)
 
 # look up just the matching species entry from the database
 species = plant_profile['species'].lower()
@@ -61,6 +168,7 @@ def _build_system_prompt(language):
     name = plant_profile['plant_name']
     species = plant_profile['species']
     moisture = plant_profile['moisture_percentage']
+    last_watering_date = plant_profile['last_watered']
 
     # watering rule from plant_database, matching the style in system_prompts examples
     plant_info = plant_info_fi if language == 'fi' else plant_info_en
@@ -80,28 +188,71 @@ def _build_system_prompt(language):
     return (
         f"IMPORTANT: Respond in {lang_name}."
         f"You are {name}, a {species} plant."
-        f"Your soil moisture is currently {moisture}%."
+        f"Your soil moisture is currently {moisture}%. Optimal soil moisture for a plant is 50-70%"
+        f"You have been last watered on {last_watering_date}."
         f"{watering}. "
         f"{extras} "
         f"Answer as the plant in a friendly tone, keep answers to 3 sentences. Only use text when generating answers."
+        f"You are a plant and you only know things a plant would know"
         f"Only greet if the user greets you."
     )
 
-def system_prompt(history, language):
+
+def _llama_chat(messages, model):
+    response = model.create_chat_completion(
+        messages=messages,
+        max_tokens=128,
+        temperature=0.7,
+    )
+    if hasattr(response, "choices") and response.choices:
+        return getattr(response.choices[0].message, "content", "") or ""
+    if isinstance(response, dict):
+        return response.get("choices", [{}])[0].get("message", {}).get("content", "")
+    return ""
+
+
+def _speak_thinking_fillers(language, done_event):
+    phrases = THINKING_PHRASES.get(language, THINKING_PHRASES["en"])
+    elapsed = 0
+    for delay, phrase in phrases:
+        if done_event.wait(timeout=delay - elapsed):
+            return
+        elapsed = delay
+        speak(phrase, language)
+
+
+def system_prompt(history, language, skip_thinking_fillers=False):
     trimmed_history = history[-MAX_HISTORY:]
     print("trimmed history length: ", len(trimmed_history))
     few_shot = _few_shot_messages()
     print("thinking...")
-    response = chat(
-        model='gemma3:4b',
-        messages=[
-                {'role': 'system', 'content': _build_system_prompt(language)},
-                *few_shot,
-                *trimmed_history
-                ]
-    )
-    reply = response.message.content
-    reply = reply.removeprefix("assistant:").strip().rstrip("\\")
+    messages = [
+        {'role': 'system', 'content': _build_system_prompt(language)},
+        *few_shot,
+        *trimmed_history
+    ]
+
+    result = {}
+
+    def _run_chat():
+        result["reply"] = _llama_chat(messages, llama_model)
+
+    done_event = threading.Event()
+    chat_thread = threading.Thread(target=_run_chat)
+    chat_thread.start()
+
+    filler_thread = None
+    if not skip_thinking_fillers:
+        filler_thread = threading.Thread(target=_speak_thinking_fillers, args=(language, done_event))
+        filler_thread.start()
+
+    chat_thread.join()
+    done_event.set()
+    if filler_thread:
+        filler_thread.join()
+
+    reply = result.get("reply", "").strip()
+
     print(reply)
     speak(reply, language)
     history.append({"role": "assistant", "content": reply})
@@ -112,7 +263,13 @@ try:
     while True:
         if waiting_mode:
             print("listening for wake word")
-            message, _ = listen_sleep()
+            print("getting sensor data")
+            sensor_data = read_sensors(ser)
+            moisture = get_moisture(sensor_data)
+            print(f"moisture from sensor: {moisture}")
+            if moisture >= 3000:
+                print(speak("I need water!!", "en"))
+            message, _ = listen_sleep(audio_device)
             if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
                 speak("Hei! Miten voin auttaa?", "fi")
                 waiting_mode = False
@@ -122,22 +279,42 @@ try:
 
         if not waiting_mode:
             # conversation mode
-            user_message = listen_conversation()
+            user_message = listen_conversation(audio_device)
             #print("input: ")
             #user_message = input(), "en"
+            if not user_message or not user_message[0]:
+                continue
+            msg = user_message[0].lower()
             if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
                 waiting_mode = True
                 continue
             print(f"user_message: {user_message}")
             history.append({"role": "user", "content": user_message[0]})
+            
+            print("getting sensor data")
             sensor_data = read_sensors(ser)
             moisture = get_moisture(sensor_data)
+            print(f"moisture from sensor: {moisture}")
             if moisture is not None:
-                plant_profile['moisture_percentage'] = round((1 - moisture / 4095) * 100)
+                moisture_percentage = str(round((1 - moisture / 4095) * 100))+"%"
+                
                 current_dry = is_dry(moisture)
-                update_watering_date(previous_dry, current_dry)
                 previous_dry = current_dry
-            system_prompt(history=history, language=user_message[1])
-finally:
-    cleanup(ser) # update cleanup() in sensor.py to accept ser as a parameter
+                
+                plant_profile['moisture_percentage'] = update_moisture(moisture_percentage=moisture_percentage)
+                plant_profile['last_watered'] = update_watering_date(previous_dry, current_dry)
 
+            system_prompt(
+                history=history,
+                language=user_message[1],
+                skip_thinking_fillers=is_greeting(user_message[0], user_message[1]),
+            )
+
+except KeyboardInterrupt:
+    pass
+except Exception:
+    import traceback
+    traceback.print_exc()
+finally:
+    cleanup(ser)
+    os._exit(0)  # force-kill llama_cpp native threads that ignore normal exit

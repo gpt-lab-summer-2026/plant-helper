@@ -40,3 +40,5 @@ test_ollama.py
 
 /example_audios
 /finetuned-models
+
+gemma-3-4b-it-Q4_0.gguf

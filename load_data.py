@@ -31,17 +31,10 @@ def get_active_plant(data):
 
 def read():
     data = load_data()
-    print('File data =', data)
-
     active_plant = get_active_plant(data)
     if not active_plant:
         print('No plant data available.')
         return
-
-    print(active_plant.get('plant_name'))
-    print(active_plant.get('species'))
-    print(active_plant.get('last_watered'))
-    
     return active_plant
 
 
@@ -49,12 +42,10 @@ def update_file(data):
     if not isinstance(data, dict):
         raise ValueError('data must be a dict')
 
-    saved = save_data(data)
-    print('File data =', saved)
-    return saved
+    return save_data(data)
 
 
-def update_plant(plant_name, species=None, last_watered=None, make_active=False):
+def update_plant(plant_name, species=None, last_watered=None, moisture_percentage=None, make_active=False):
     data = load_data()
     plant_list = data.setdefault('plant_data', [])
 
@@ -67,6 +58,8 @@ def update_plant(plant_name, species=None, last_watered=None, make_active=False)
         plant['species'] = species
     if last_watered is not None:
         plant['last_watered'] = last_watered
+    if moisture_percentage is not None:
+        plant['moisture_percentage'] = moisture_percentage
     if make_active:
         for other in plant_list:
             other['active'] = 'active' if other is plant else 'inactive'
@@ -76,7 +69,5 @@ def update_plant(plant_name, species=None, last_watered=None, make_active=False)
     return data
 
 def load_examples():
-    ns = {}
-    with open("data/system_prompts.json") as f:
-        exec(f.read(), ns)
-    return ns.get("examples", [])
+    with open("data/system_prompts.json", encoding="utf-8") as f:
+        return json.load(f)
