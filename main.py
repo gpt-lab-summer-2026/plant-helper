@@ -53,7 +53,7 @@ def is_greeting(message, language):
 waiting_mode = False
 
 SERIAL_BAUDRATE = 921600
-DEFAULT_SERIAL_PORTS = ["/dev/ttyUSB0", "/dev/ttyACM0", "/dev/cu.usbserial-0001"]
+DEFAULT_SERIAL_PORTS = ["/dev/ttyUSB0", "/dev/ttyACM0", "/dev/cu.usbserial-0001", "/dev/cu.usbmodem11401"]
 
 
 def find_serial_port(preferred_port=None, baudrate=SERIAL_BAUDRATE, timeout=2):
@@ -259,6 +259,7 @@ def system_prompt(history, language, skip_thinking_fillers=False):
 
 history = []
 
+speak("Hello! How can I help you?", "en")
 try:
     while True:
         if waiting_mode:
@@ -269,7 +270,7 @@ try:
             print(f"moisture from sensor: {moisture}")
             if moisture >= 3000:
                 print(speak("I need water!!", "en"))
-            message, _ = listen_sleep(audio_device)
+            message, _ = listen_sleep(ser, audio_device)
             if message and (message.lower() == WAKE_WORD_FI or WAKE_WORD_FI in message.lower()):
                 speak("Hei! Miten voin auttaa?", "fi")
                 waiting_mode = False
@@ -279,14 +280,19 @@ try:
 
         if not waiting_mode:
             # conversation mode
-            user_message = listen_conversation(audio_device)
+            user_message = listen_conversation(ser, audio_device)
             #print("input: ")
             #user_message = input(), "en"
             if not user_message or not user_message[0]:
                 continue
             msg = user_message[0].lower()
-            if user_message[0].lower() == STOP_WORD_FI or user_message[0].lower() == STOP_WORD_EN or STOP_WORD_FI in user_message[0].lower() or STOP_WORD_EN in user_message[0].lower():
+            if user_message[0].lower() == STOP_WORD_EN or  STOP_WORD_EN in user_message[0].lower():
                 waiting_mode = True
+                speak("See you later!", "en")
+                continue
+            elif user_message[0].lower() == STOP_WORD_FI or STOP_WORD_FI in user_message[0].lower():
+                waiting_mode = True
+                speak("Hei hei! Nähdään myöhemmin!", "fi")
                 continue
             print(f"user_message: {user_message}")
             history.append({"role": "user", "content": user_message[0]})

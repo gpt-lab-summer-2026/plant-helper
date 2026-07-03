@@ -1,6 +1,7 @@
 import numpy
 import webrtcvad
 import sounddevice as sd
+from sensor import *
 
 from faster_whisper import WhisperModel
 
@@ -10,7 +11,7 @@ DEFAULT_LANGUAGE = "fi"
 model_wake = WhisperModel("small", device="cpu", compute_type="int8")
 model_sleep = WhisperModel("tiny", device="cpu", compute_type="int8")
 vad = webrtcvad.Vad()
-vad.set_mode(2)
+vad.set_mode(3)
 
 
 def _has_audio_device():
@@ -64,7 +65,7 @@ def _transcribe(recording_float32, fs, model, initial_prompt=None):
     return text, language
 
 
-def listen_sleep(audio_device=None):
+def listen_sleep(ser, audio_device=None):
     if not _has_audio_device():
         print("Audio input unavailable, falling back to keyboard")
         return _keyboard_fallback("Wake word: ")
@@ -81,7 +82,10 @@ def listen_sleep(audio_device=None):
 
     try:
         with sd.InputStream(samplerate=fs, channels=1, dtype="int16", device=audio_device) as stream:
+            print("listenning")
             while True:
+                 # ledi päälle
+                ser.write(b"START\n")
                 raw_chunk, _ = stream.read(chunk_size)
                 chunk = raw_chunk.flatten()
                 raw = chunk.tobytes()
@@ -105,6 +109,7 @@ def listen_sleep(audio_device=None):
 
                 if speech_detected:
                     recorded_chunks.append(chunk)
+            ser.write(b"STOP\n")
     except Exception as e:
         print(f"Audio error: {e}, falling back to keyboard")
         return _keyboard_fallback("Wake word: ")
@@ -118,7 +123,7 @@ def listen_sleep(audio_device=None):
     return _transcribe(recording_float32, fs, model_sleep)
 
 
-def listen_conversation(audio_device=None):
+def listen_conversation(ser, audio_device=None):
     if not _has_audio_device():
         print("Audio input unavailable, falling back to keyboard")
         return _keyboard_fallback("Type your message: ")
@@ -133,24 +138,27 @@ def listen_conversation(audio_device=None):
     recorded_chunks = []
     pre_buffer = []
 
-    print("speak now")
+   
     try:
         with sd.InputStream(samplerate=fs, channels=1, dtype="int16", device=audio_device) as stream:
+            print("speak now")
             while True:
+                # ledi päälle
+                ser.write(b"START\n")
                 raw_chunk, _ = stream.read(chunk_size)
                 chunk = raw_chunk.flatten()
                 raw = chunk.tobytes()
                 is_speech = vad.is_speech(raw, sample_rate=fs)
 
                 if is_speech:
-                    print("speech")
+                    #print("speech")
                     if not speech_detected:
                         recorded_chunks.extend(pre_buffer)
                         pre_buffer.clear()
                     silence_count = 0
                     speech_detected = True
                 elif speech_detected:
-                    print("silence")
+                    #print("silence")
                     silence_count += 1
                     if silence_count >= silence_limit:
                         print(f"Stopped after {silence_limit} silence chunks")
@@ -162,6 +170,7 @@ def listen_conversation(audio_device=None):
 
                 if speech_detected:
                     recorded_chunks.append(chunk)
+            ser.write(b"STOP\n")
     except Exception as e:
         print(f"Audio error: {e}, falling back to keyboard")
         return _keyboard_fallback("Type your message: ")
