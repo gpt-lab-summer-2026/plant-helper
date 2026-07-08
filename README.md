@@ -2,6 +2,8 @@
 
 Have you ever wanted to have a chat with your house plant? Plant Helper is small machine that you can plug into a plant pot; it can help you take care of your plant. You can chat with plant helper and it gives you info about the plant and suggestions how to take care of the plant.
 
+[Demo video](https://youtu.be/CU4SRoDkX88?is=biAWc1BHvsas9HNk)
+
 ## Features
 
 Communicate with your plant by simply talking to it! After setting up a [plant profile](data/plant_profile.json), you can ask the plant about things related to it, such as:
