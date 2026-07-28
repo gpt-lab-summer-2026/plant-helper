@@ -39,3 +39,7 @@ When installed, run:
 to install correct depencies. Install language model gemma-3-4b-q4 .gguf-file (other models work as well if they aren't too big for the raspberry pi). Run the program via
 
   ```python main.py.```
+
+## Possible improvements / additions
+
+With the plant helper there is a lot of room for improvement. In this version there was only used one sensor; moisture sensor, but by adding more sensors you could get more detailed data and the program would be more precise about plant's condition. Possible extra sensors would include air humidity, light sensor, camera and pH-sensor. It could also be connected to a irrigation system that would handle watering of the plant(s). With better hardware and computing power a bigger LLM could be used that would improve speech-to-text, improve the latency of model generating responses and the quality of the responses. 
